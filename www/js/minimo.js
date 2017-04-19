@@ -57,6 +57,28 @@ $('#minimo').css('opacity','0');
     }, 1000);
 }
 
+selectCalculation = function(e)
+{
+    if(e == "auto")
+        {
+            o('Calculation simple');
+            $("#tabAuto").attr('class', 'calcTabActive');
+            $("#tabManual").attr('class', 'calcTab');
+            $("#tabMarker").css('margin-left','5%');
+            $("#calcBlock").css('margin-left','0%');
+        }
+    if(e == "manual")
+        {       
+            o('Calculation manual');
+            $("#tabAuto").attr('class', 'calcTab');
+            $("#tabManual").attr('class', 'calcTabActive');
+            $("#tabMarker").css('margin-left','55%');
+            $("#calcBlock").css('margin-left','-100%');
+        }
+    
+}
+
+
 // Content seletor
 selectContent = function(i)
 {
@@ -66,6 +88,15 @@ selectContent = function(i)
         activePage = "calculation";
         $('#container').css('margin-left','0%');
         $('#mark').css('top','0px');
+        $('#shadow').css('opacity', '0');
+        
+        setTimeout(function(){
+            $('#shadow').css('display', 'none');
+        }, 100); 
+    } else {
+        // not calculation
+        $('#shadow').css('display', 'block');
+        $('#shadow').css('opacity', '1');
     }
 
     if(i == "package")
@@ -98,6 +129,7 @@ selectContent = function(i)
 // Trigger when windows is loaded
 window.onload = function()
 {
+    navigator.splashscreen.hide();
     o('Closing preloader');
     
     $("#loader").hide();
