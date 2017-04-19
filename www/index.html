@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-    
+
 <head>
     <!-- HEADER -->
     <meta charset="utf-8">
@@ -18,70 +18,70 @@
     <!-- STYLING -->
     <meta name="theme-color" content="#b72025">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css?family=Exo|Fira+Sans+Condensed|PT+Sans|Roboto+Condensed" rel="stylesheet">
 </head>
-    <!-- PRELOADER CSS -->
+<!-- PRELOADER CSS -->
+
+<style>
+    #loader {
+        display: table-cell;
+        z-index: 99;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        vertical-align: middle;
+        background: #FFF;
+        overflow: hidden;
+        opacity: 0.8;
+        transition: 0.3s;
+    }
     
-    <style>
-        #loader {
-            display: table-cell;
-            z-index: 99;
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            vertical-align: middle;
-            background: #FFF;
-            overflow: hidden;
-            opacity: 0.8;
-            transition: 0.3s;
+    .loader {
+        border: 12px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 12x solid #ca2027;
+        border-bottom: 12px solid #ca2027;
+        width: 50px;
+        height: 50px;
+        -webkit-animation: spin 0.5s ease-in-out infinite;
+        animation: spin 1s ease-out-in infinite;
+        display: inline-table;
+        position: absolute;
+        left: calc(50% - 40px);
+        top: calc(50% - 40px);
+        margin: auto;
+    }
+    
+    @-webkit-keyframes spin {
+        0% {
+            -webkit-transform: rotate(0deg);
         }
-
-        .loader {
-            border: 12px solid #f3f3f3;
-            border-radius: 50%;
-            border-top: 12x solid #ca2027;
-            border-bottom: 12px solid #ca2027;
-            width: 50px;
-            height: 50px;
-            -webkit-animation: spin 0.5s ease-in-out infinite;
-            animation: spin 1s ease-out-in infinite;
-            display: inline-table;
-            position: absolute;
-            left: calc(50% - 40px);
-            top: calc(50% - 40px);
-            margin: auto;
+        100% {
+            -webkit-transform: rotate(360deg);
         }
-
-        @-webkit-keyframes spin {
-            0% {
-                -webkit-transform: rotate(0deg);
-            }
-            100% {
-                -webkit-transform: rotate(360deg);
-            }
+    }
+    
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
         }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
+        100% {
+            transform: rotate(360deg);
         }
+    }
 
-    </style>
-    <body>
+</style>
+
+<body oncontextmenu="return false;">
     <!-- PRELOADER -->
-        
+
     <div id="loader">
         <div class="loader"></div>
     </div>
-    
-    
+
+
     <!-- TOASTER -->
-        
+
     <div id="toast">
         <div class="toast-background"></div>
         <div class="toast-container">
@@ -90,18 +90,21 @@
         </div>
     </div>
     <!-- TOASTER -->
-    
+
     <!-- MINIMO -->
-        
+
     <div id="minimo" onclick="hideMinimo();">
         <br /><br /><br /><br /><br /><br /><img src="ui/minimo.png" width="200px" height="70px" /><br />DSF Calculation &copy minimo labs<br />all right reserved<br /><br /> This application is not an official application from Dipostar,<br />this application is purely designed to facilitate the calculation <br />of loan application at Dipo Star Finance Semarang, the<br />calculation is not binding and subject to change<br />- without notice<br /><br />Further info please contact<br />Novan Angga at <a href="tel:08112754802">08112754802</a> for further <a href="#">assistance</a>
     </div>
-    
+
     <div id="popup">
-        <div class="header"><div class="back" onclick="hidePopup();"></div></div>
+        <div class="header">
+            <div class="back" onclick="hidePopup();"></div>
+        </div>
         <?PHP include "mod.popup.php"; ?>
-    </div><!--popup-->
-    <div id="newCalc" onclick="startCalc();">&nbsp;</div>
+    </div>
+    <!--popup-->
+    <div id="newCalc" onclick="selectContent('calculation');">&nbsp;</div>
 
     <div id="sidenav">
         <div id="mark">&nbsp;</div>
@@ -112,6 +115,7 @@
         <a href="#help" onclick="selectContent('help');">HELP</a>
         <a href="#about" onclick="javascript:showMinimo();">ABOUT</a>
     </div>
+    
     <div id="main">
         <div id="headerImage"></div>
         <div id="menuCloser" onclick="navClose();"></div>
@@ -122,36 +126,202 @@
         <!-- header -->
         <div id="shadow"><img src="ui/shadow.png" width="100%" height="65px" /></div>
         <!-- shadow -->
+        
         <div id="container">
 
             <div id="container-calc" class="block-clean">
-                <?PHP include "res/mod.calc.php"; ?><!-- CALCULATION -->
-            </div>
-            <div id="" class="block">
-                <div class="spacer"></div>
-                BLOCK
-                <div class="footer">&nbsp;</div>
-                <!-- footer -->
-            </div>
-            <div id="" class="block">
-                <div class="spacer"></div>lorem<br />ipsum<br />dolor<br />sit
-                <div class="footer"></div>
-                <!-- footer -->
-            </div>
-            <div id="contentHelp" class="block-clean">
-                <div class="spacer"></div>
-                NEWS HERE
-                <div class="footer"></div>
-                <!-- footer -->
-            </div>
-            <!-- contentHelp -->
-        <!-- LOAD SCRIPT -->
-<!-- document footer start -->
-	</div><!-- container -->
-</div><!-- main -->
-<script src="cordova.js"></script>
-<script src="js/jquery.js"></script>
-<script src="js/minimo.js"></script>
+                
+<!-- ///////////////////////////////////////////////// CALCULATION MODULE /////////////////////////////////////////////////////////////// -->
+                
+                <div id="spacer" style="height:50px;">&nbsp;</div>
+                <div id="calcMenu">
+                    <div id="tabAuto" class="calcTab" onclick="javascript:selectCalculation('auto');">AUTOMATIC</div>
+                    <div id="tabManual" class="calcTabActive" onclick="javascript:selectCalculation('manual');">MANUAL</div>
+                    <div id="tabMarker">&nbsp;</div>
+                </div>
+                <!-- calcMenu -->
+
+
+                <div id="calcBlock">
+
+                    <div id="calc_auto" class="calcPanel">
+                        <div ="manualSlide2" class="slide"><!--manualSlide1-->
+                <form onsubmit="return false;">
+                    <div class="caption">Masukan harga OTR</div>
+                    <input id="auto_otr" name="auto_otr" value="440,000,000" type="text" placeholder="Harga OTR" onkeyup="numberize(this);" autocomplete="off" />
+                    <div class="caption">Pilih Tenor kredit</div>
+                    <select id="auto_tenor" name="auto_tenor">
+                        <option value="12">12 month fixed</option>
+                        <option value="24">24 month fixed</option>
+                        <option value="25">25 month fixed</option>
+                        <option value="36" selected>36 month fixed</option>
+                        <option value="48">48 month fixed</option>
+                        <option value="60">60 month fixed</option>
+                    </select><!--adv_tenor-->
+                    <div class="caption">Pilih jenis asuransi</div>
+                    <select id="adv_insurance" name="adv_insurance">
+                        <option value="CV">CV Allrisk</option>
+                        <option value="TLO">CV TLO</option>
+                        <option value="PC">PC Allrisk</option>
+                        <option value="BUS">Bus Allrisk</option>
+                        <option value="BUSTLO">Bus TLO</option>
+                    </select><!--adv_tenor-->
+                    
+                    <div class="caption">Persentase bunga per tahun (% flat)</div>
+                    <input id="auto_rate" name="auto_rate" type="decimal" value="4.15" onblur="percentize(this);" autocomplete="off" />
+                    
+                    <div class="caption">Masukan premi TJH / TPL per tahun</div>
+                    <input id="auto_tjh" name="auto_tjh" type="text" onkeyup="numberize(this);" autocomplete="off" />
+                    
+                    <div class="caption">Masukan provisi (%)</div>
+                    <input id="auto_prov" name="auto_prov" type="decimal" onblur="percentize(this);" autocomplete="off" />
+                    
+                    <div class="caption">Asuransi masuk PH</div>
+                    <div id="auto_insIncToggle" onclick="autoInsIncToggle();" class="miniToggler">&nbsp;</div>
+                    <input id="advInsInc" name="advInsInc" value="no" class="inputHidden" />
+                    
+                    <div class="caption">Angsuran dibayar dibelakang (ADDB)</div>
+                    <div id="auto_addbToggle" onclick="autoAddbToggle();" class="miniToggler">&nbsp;</div>
+                    <input id="autoAddb" name="autoAddb" value="no" class="inputHidden" />
+                    
+                    <div class="caption">Ada NPWP</div>
+                    <div id="autov_npwpToggle" onclick="autoNpwpToggle();" class="miniToggler">&nbsp;</div>
+                    <input id="autoNpwp" name="autoNpwp" value="no" class="inputHidden" />
+                    
+                    <div class="caption">Metode perhitungan</div>
+                    <select id="auto_method" name="auto_method" onchange="autoMethod();">
+                        <option value="dp">Persentase DP</option>
+                        <option value="tdp">Total pembayaran</option>
+                        <option value="usl">Angsuran tertentu</option>
+                    </select><!--adv_method-->
+                    
+                    <select id="auto_dp" name="auto_dp">
+                        <option value="0.15">15%</option>
+                        <option value="0.2" selected>20%</option>
+                        <option value="0.25">25%</option>
+                        <option value="0.3">30%</option>
+                        <option value="0.35">35%</option>
+                        <option value="0.4">40%</option>
+                        <option value="0.45">45%</option>
+                        <option value="0.5">50%</option>
+                    </select><!--adv_dp-->
+                    <input id="auto_tdp" name="auto_tdp" type="text" placeholder="TDP yang diinginkan" value="120000000" style="display:none;" onkeyup="numberize(this);" autocomplete="off" />
+                    <input id="auto_usl" name="auto_tdp" type="text" placeholder="Angsuran yang diinginkan" style="display:none;" onkeyup="numberize(this);" autocomplete="off" />
+                    
+                    <button onclick="advFormSubmit();" value="submit" class="nextButton">Lanjut</button>
+                    
+                </form>
+                <br />
+            </div><!--manualSlide2-->
+                    </div><!--calc_auto-->
+                    
+                    <div id="calc_manual" class="calcPanel">
+                        <div id="tabManualContainer">
+            <div ="manualSlide1" class="slide"><!--manualSlide1-->
+                <form onsubmit="return false;">
+                    <div class="caption">Masukan harga OTR</div>
+                    <input id="adv_otr" name="adv_otr" value="440,000,000" type="text" placeholder="Harga OTR" onkeyup="numberize(this);" autocomplete="off" />
+                    <div class="caption">Pilih Tenor kredit</div>
+                    <select id="adv_tenor" name="adv_tenor">
+                        <option value="12">12 month fixed</option>
+                        <option value="24">24 month fixed</option>
+                        <option value="25">25 month fixed</option>
+                        <option value="36" selected>36 month fixed</option>
+                        <option value="48">48 month fixed</option>
+                        <option value="60">60 month fixed</option>
+                    </select><!--adv_tenor-->
+                    <div class="caption">Pilih jenis asuransi</div>
+                    <select id="adv_insurance" name="adv_insurance">
+                        <option value="CV">CV Allrisk</option>
+                        <option value="TLO">CV TLO</option>
+                        <option value="PC">PC Allrisk</option>
+                        <option value="BUS">Bus Allrisk</option>
+                        <option value="BUSTLO">Bus TLO</option>
+                    </select><!--adv_tenor-->
+                    
+                    <div class="caption">Persentase bunga per tahun (% flat)</div>
+                    <input id="adv_rate" name="adv_rate" type="decimal" value="4.15" onblur="percentize(this);" autocomplete="off" />
+                    
+                    <div class="caption">Masukan premi TJH / TPL per tahun</div>
+                    <input id="adv_tjh" name="adv_tjh" type="text" onkeyup="numberize(this);" autocomplete="off" />
+                    
+                    <div class="caption">Masukan provisi (%)</div>
+                    <input id="adv_prov" name="adv_prov" type="decimal" onblur="percentize(this);" autocomplete="off" />
+                    
+                    <div class="caption">Asuransi masuk PH</div>
+                    <div id="adv_insIncToggle" onclick="advInsIncToggle();" class="miniToggler">&nbsp;</div>
+                    <input id="advInsInc" name="advInsInc" value="no" class="inputHidden" />
+                    
+                    <div class="caption">Angsuran dibayar dibelakang (ADDB)</div>
+                    <div id="adv_addbToggle" onclick="advAddbToggle();" class="miniToggler">&nbsp;</div>
+                    <input id="advAddb" name="advAddb" value="no" class="inputHidden" />
+                    
+                    <div class="caption">Ada NPWP</div>
+                    <div id="adv_npwpToggle" onclick="advNpwpToggle();" class="miniToggler">&nbsp;</div>
+                    <input id="advNpwp" name="advNpwp" value="no" class="inputHidden" />
+                    
+                    <div class="caption">Metode perhitungan</div>
+                    <select id="adv_method" name="adv_method" onchange="advMethod();">
+                        <option value="dp">Persentase DP</option>
+                        <option value="tdp">Total pembayaran</option>
+                        <option value="usl">Angsuran tertentu</option>
+                    </select><!--adv_method-->
+                    
+                    <select id="adv_dp" name="adv_dp">
+                        <option value="0.15">15%</option>
+                        <option value="0.2" selected>20%</option>
+                        <option value="0.25">25%</option>
+                        <option value="0.3">30%</option>
+                        <option value="0.35">35%</option>
+                        <option value="0.4">40%</option>
+                        <option value="0.45">45%</option>
+                        <option value="0.5">50%</option>
+                    </select><!--adv_dp-->
+                    <input id="adv_tdp" name="adv_tdp" type="text" placeholder="TDP yang diinginkan" value="120000000" style="display:none;" onkeyup="numberize(this);" autocomplete="off" />
+                    <input id="adv_usl" name="adv_tdp" type="text" placeholder="Angsuran yang diinginkan" style="display:none;" onkeyup="numberize(this);" autocomplete="off" />
+                    
+                    <button onclick="advFormSubmit();" value="submit" class="nextButton">Lanjut</button>
+                    
+                </form>
+                <br />
+            </div><!--manualSlide1-->
+        </div><!--tabManualContainer-->
+                    </div><!--calc_advance-->
+
+                </div>
+                
+<!-- ///////////////////////////////////////////////// CALCULATION MODULE /////////////////////////////////////////////////////////////// -->
+                
+        </div>
+        <div id="" class="block">
+            <div class="spacer"></div>
+            BLOCK
+            <div class="footer">&nbsp;</div>
+            <!-- footer -->
+        </div>
+        <div id="" class="block">
+            <div class="spacer"></div>
+            lorem<br />ipsum<br />dolor<br />sit
+            <div class="footer"></div>
+            <!-- footer -->
+        </div>
+        <div id="contentHelp" class="block-clean">
+            <div class="spacer"></div>
+            NEWS HERE
+            <div class="footer"></div>
+            <!-- footer -->
+        </div>
+        <!-- contentHelp -->
+        <!-- document footer start -->
+
+    </div>
+    <!-- container -->
+    </div>
+    <!-- main -->
+    <script src="cordova.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/minimo.js"></script>
 </body>
-</html> 
+
+</html>
 <!-- document footer end -->
