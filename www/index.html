@@ -20,10 +20,138 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css?family=Exo|Fira+Sans+Condensed|PT+Sans|Roboto+Condensed" rel="stylesheet">
 </head>
+    <!-- PRELOADER CSS -->
+    
+    <style>
+        #loader {
+            display: table-cell;
+            z-index: 99;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            vertical-align: middle;
+            background: #FFF;
+            overflow: hidden;
+            opacity: 0.8;
+            transition: 0.3s;
+        }
+
+        .loader {
+            border: 12px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 12x solid #ca2027;
+            border-bottom: 12px solid #ca2027;
+            width: 50px;
+            height: 50px;
+            -webkit-animation: spin 0.5s ease-in-out infinite;
+            animation: spin 1s ease-out-in infinite;
+            display: inline-table;
+            position: absolute;
+            left: calc(50% - 40px);
+            top: calc(50% - 40px);
+            margin: auto;
+        }
+
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+    </style>
     <body>
-        Dolor sit amet para elicting domet
+    <!-- PRELOADER -->
         
+    <div id="loader">
+        <div class="loader"></div>
+    </div>
+    
+    
+    <!-- TOASTER -->
+        
+    <div id="toast">
+        <div class="toast-background"></div>
+        <div class="toast-container">
+            <div id="toast-message" class="toast-message">Please insert OTR</div>
+            <div class="toast-button" onclick="showhide('toast');">OK</div>
+        </div>
+    </div>
+    <!-- TOASTER -->
+    
+    <!-- MINIMO -->
+        
+    <div id="minimo" onclick="hideMinimo();">
+        <br /><br /><br /><br /><br /><br /><img src="ui/minimo.png" width="200px" height="70px" /><br />DSF Calculation &copy minimo labs<br />all right reserved<br /><br /> This application is not an official application from Dipostar,<br />this application is purely designed to facilitate the calculation <br />of loan application at Dipo Star Finance Semarang, the<br />calculation is not binding and subject to change<br />- without notice<br /><br />Further info please contact<br />Novan Angga at <a href="tel:08112754802">08112754802</a> for further <a href="#">assistance</a>
+    </div>
+    
+    <div id="popup">
+        <div class="header"><div class="back" onclick="hidePopup();"></div></div>
+        <?PHP include "mod.popup.php"; ?>
+    </div><!--popup-->
+    <div id="newCalc" onclick="startCalc();">&nbsp;</div>
+
+    <div id="sidenav">
+        <div id="mark">&nbsp;</div>
+        <!-- mark -->
+        <a href="#calculation" onclick="selectContent('calculation');">CALCULATION</a>
+        <a href="#package" onclick="selectContent('package');">PACKAGE</a>
+        <a href="#news" onclick="selectContent('news');">NEWS</a>
+        <a href="#help" onclick="selectContent('help');">HELP</a>
+        <a href="#about" onclick="javascript:showMinimo();">ABOUT</a>
+    </div>
+    <div id="main">
+        <div id="headerImage"></div>
+        <div id="menuCloser" onclick="navClose();"></div>
+        <div id="header">
+            <div id="toggler" onclick="navOpen();">&nbsp;</div>
+
+        </div>
+        <!-- header -->
+        <div id="shadow"><img src="ui/shadow.png" width="100%" height="65px" /></div>
+        <!-- shadow -->
+        <div id="container">
+
+            <div id="container-calc" class="block-clean">
+                <?PHP include "res/mod.calc.php"; ?><!-- CALCULATION -->
+            </div>
+            <div id="" class="block">
+                <div class="spacer"></div>
+                BLOCK
+                <div class="footer">&nbsp;</div>
+                <!-- footer -->
+            </div>
+            <div id="" class="block">
+                <div class="spacer"></div>lorem<br />ipsum<br />dolor<br />sit
+                <div class="footer"></div>
+                <!-- footer -->
+            </div>
+            <div id="contentHelp" class="block-clean">
+                <div class="spacer"></div>
+                NEWS HERE
+                <div class="footer"></div>
+                <!-- footer -->
+            </div>
+            <!-- contentHelp -->
         <!-- LOAD SCRIPT -->
-        
-    </body>
-</html>
+<!-- document footer start -->
+	</div><!-- container -->
+</div><!-- main -->
+<script src="cordova.js"></script>
+<script src="js/jquery.js"></script>
+<script src="js/minimo.js"></script>
+</body>
+</html> 
+<!-- document footer end -->
