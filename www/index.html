@@ -85,23 +85,45 @@
     <div id="toast">
         <div class="toast-background"></div>
         <div class="toast-container">
-            <div id="toast-message" class="toast-message">Please insert OTR</div>
-            <div class="toast-button" onclick="showhide('toast');">OK</div>
+            <div id="toast-message" class="toast-message">Toast Message</div>
+            <div class="toast-button" onclick="hideToast();">OK</div>
         </div>
     </div>
     <!-- TOASTER -->
 
     <!-- MINIMO -->
 
-    <div id="minimo" onclick="hideMinimo();">
-        <br /><br /><br /><br /><br /><br /><img src="ui/minimo.png" width="200px" height="70px" /><br />DSF Calculation &copy minimo labs<br />all right reserved<br /><br /> This application is not an official application from Dipostar,<br />this application is purely designed to facilitate the calculation <br />of loan application at Dipo Star Finance Semarang, the<br />calculation is not binding and subject to change<br />- without notice<br /><br />Further info please contact<br />Novan Angga at <a href="tel:08112754802">08112754802</a> for further <a href="whatsapp://send?text=LoremIpsum">assistance</a>
+    <div id="minimo">
+        
+        <br /><br /><br /><br /><br /><br /><br /><br /><img src="ui/minimo.png" width="200px" height="70px" /><br />DSF Calculation &copy minimo labs<br />all right reserved<br /><br /> This application is not an official application from Dipostar,<br />this application is purely designed to facilitate the calculation <br />of loan application at Dipo Star Finance Semarang, the<br />calculation is not binding and subject to change<br />- without notice<br /><br />Further info please contact<br />Novan Angga at <a href="#" onclick="window.open('tel:+628112754802', '_system');">+628112754802</a> for further <a href="#" onclick="window.open('whatsapp://send?text=Ping!&phone=+628112754802', '_system');">assistance</a>
     </div>
 
     <div id="popup">
+        <div id="popup-share" onclick="showShare();"></div>
+        
+        <div id="popup-toast">
+            <div class="popup-toast-cont">
+                <div id="pop-share-sms" class="popup-toast-button" onclick="shareSms();"></div>
+                <div id="pop-share-wa" class="popup-toast-button" onclick="shareWa();"></div>
+            </div>
+            <div class="popup-toast-bg" onclick="hideShare();"></div>
+        </div>
+
         <div class="header">
             <div class="back" onclick="hidePopup();"></div>
         </div>
-        <?PHP include "mod.popup.php"; ?>
+        <h2>SIMULASI PEMBIAYAAN</h2>
+        <p>Perhitungan ini hanya simulasi, tidak mengikat dan dapat berubah sewaktu - waktu tanpa pemberitahuan</p>
+        <hr />
+        <div class="caption">HARGA OTR</div><div id="popup-otr" class="content"></div><div class="remarks"></div>
+        <div class="caption">DP MURNI</div><div id="popup-csp" class="content"></div><div class="remarks"><span id="popup-dpText"></span></div>
+        <div class="caption">ADMINISTRASI</div><div id="popup-adm" class="content"></div><div class="remarks"></div>
+        <div class="caption">ASURANSI</div><div id="popup-insurance" class="content">16.425.000</div><div class="remarks"><span id="popup-insText"></span></div>
+        <div class="caption">PREMI TJH</div><div id="popup-tjh" class="content"></div><div class="remarks">p.a</div>
+        <div class="caption">PROVISI</div><div id="popup-provision" class="content"></div><div id="popup-textProvision" class="remarks"></div>
+        <div class="caption">Bunga</div><div id="popup-rate" class="content"></div><div class="remarks">Flat p.a</div>
+        <div class="captionBold"><b>ANGSURAN</b></div><div class="contentBold"><b id="popup-usl"></b></div><div class="remarksBold">X <span id="popup-tenor">25</span></div>
+        <div class="captionBold"><b>TOTAL DP</b></div><div class="contentBold"><b id="popup-tdp">0</b></div><div class="remarksBold"></div>
     </div>
     <!--popup-->
     <div id="newCalc" onclick="selectContent('calculation');">&nbsp;</div>
@@ -109,11 +131,11 @@
     <div id="sidenav">
         <div id="mark">&nbsp;</div>
         <!-- mark -->
-        <a href="#calculation" onclick="selectContent('calculation');">CALCULATION</a>
-        <a href="#package" onclick="selectContent('package');">PACKAGE</a>
-        <a href="#news" onclick="selectContent('news');">NEWS</a>
-        <a href="#help" onclick="selectContent('help');">HELP</a>
-        <a href="#about" onclick="javascript:showMinimo();">ABOUT</a>
+        <a href="#" onclick="selectContent('calculation');">CALCULATION</a>
+        <a href="#" onclick="selectContent('package');">PACKAGE</a>
+        <a href="#" onclick="selectContent('news');">NEWS</a>
+        <a href="#" onclick="selectContent('help');">HELP</a>
+        <a href="#" onclick="javascript:showMinimo();">ABOUT</a>
     </div>
     
     <div id="main">
@@ -220,18 +242,18 @@
             <div ="manualSlide1" class="slide"><!--manualSlide1-->
                 <form onsubmit="return false;">
                     <div class="caption">Masukan harga OTR</div>
-                    <input id="adv_otr" name="adv_otr" value="440,000,000" type="text" placeholder="Harga OTR" onkeyup="numberize(this);" autocomplete="off" />
+                    <input id="adv-otr" name="adv-otr" onfocus="numberFocus(this);" onblur="numberBlur(this);" type="number" value="525000000" placeholder="Harga OTR" autocomplete="off" />
                     <div class="caption">Pilih Tenor kredit</div>
-                    <select id="adv_tenor" name="adv_tenor">
+                    <select id="adv-tenor" name="adv-tenor">
                         <option value="12">12 month fixed</option>
                         <option value="24">24 month fixed</option>
                         <option value="25">25 month fixed</option>
-                        <option value="36" selected>36 month fixed</option>
+                        <option value="36">36 month fixed</option>
                         <option value="48">48 month fixed</option>
                         <option value="60">60 month fixed</option>
-                    </select><!--adv_tenor-->
+                    </select><!--adv-tenor-->
                     <div class="caption">Pilih jenis asuransi</div>
-                    <select id="adv_insurance" name="adv_insurance">
+                    <select id="adv-insurance" name="adv-insurance">
                         <option value="CV">CV Allrisk</option>
                         <option value="TLO">CV TLO</option>
                         <option value="PC">PC Allrisk</option>
@@ -240,34 +262,39 @@
                     </select><!--adv_tenor-->
                     
                     <div class="caption">Persentase bunga per tahun (% flat)</div>
-                    <input id="adv_rate" name="adv_rate" type="decimal" value="4.15" onblur="percentize(this);" autocomplete="off" />
+                    <input id="adv-rate" name="adv-rate" type="decimal" value="4.15%" onblur="inputPercentize(this);" autocomplete="off" />
+                    
+                    <div class="caption">Masukan biaya Administrasi</div>
+                    <input id="adv-adm" name="adv-adm" value="2325000" type="number" onfocus="numberFocus(this);" onblur="numberBlur(this);" autocomplete="off" />
                     
                     <div class="caption">Masukan premi TJH / TPL per tahun</div>
-                    <input id="adv_tjh" name="adv_tjh" type="text" onkeyup="numberize(this);" autocomplete="off" />
+                    <input id="adv-tjh" name="adv-tjh" type="number" onfocus="numberFocus(this);" onblur="numberBlur(this);" autocomplete="off" />
                     
                     <div class="caption">Masukan provisi (%)</div>
-                    <input id="adv_prov" name="adv_prov" type="decimal" onblur="percentize(this);" autocomplete="off" />
+                    <input id="adv-provision" name="adv-provision" value="2%" type="decimal" onblur="inputPercentize(this);" autocomplete="off" />
                     
                     <div class="caption">Asuransi masuk PH</div>
-                    <div id="adv_insIncToggle" onclick="advInsIncToggle();" class="miniToggler">&nbsp;</div>
-                    <input id="advInsInc" name="advInsInc" value="no" class="inputHidden" />
+                    <div id="adv-insIncToggle" onmouseup="advInsIncToggle();" class="miniToggler">&nbsp;</div>
+                    <input id="adv-insInclude" name="adv-insInclude" value="no" class="inputHidden" />
                     
                     <div class="caption">Angsuran dibayar dibelakang (ADDB)</div>
-                    <div id="adv_addbToggle" onclick="advAddbToggle();" class="miniToggler">&nbsp;</div>
-                    <input id="advAddb" name="advAddb" value="no" class="inputHidden" />
+                    <div id="adv-addbToggle" onmouseup="advAddbToggle();" class="miniToggler">&nbsp;</div>
+                    <input id="adv-addb" name="adv-addb" value="no" class="inputHidden" />
                     
-                    <div class="caption">Ada NPWP</div>
-                    <div id="adv_npwpToggle" onclick="advNpwpToggle();" class="miniToggler">&nbsp;</div>
-                    <input id="advNpwp" name="advNpwp" value="no" class="inputHidden" />
+                    <div class="caption">Param min CSP</div>
+                    <input id="adv-minDp" name="adv-tjh" type="number" autocomplete="off" />
+                    
+                    <div class="caption">Param max CSP</div>
+                    <input id="adv-maxDp" name="adv-tjh" type="number" autocomplete="off" />
                     
                     <div class="caption">Metode perhitungan</div>
-                    <select id="adv_method" name="adv_method" onchange="advMethod();">
-                        <option value="dp">Persentase DP</option>
-                        <option value="tdp">Total pembayaran</option>
-                        <option value="usl">Angsuran tertentu</option>
+                    <select id="adv-method" name="adv-method" onchange="advMethodSelector();">
+                        <option value="DP">Persentase DP</option>
+                        <option value="TDP">Total pembayaran</option>
+                        <option value="USL">Angsuran tertentu</option>
                     </select><!--adv_method-->
                     
-                    <select id="adv_dp" name="adv_dp">
+                    <select id="adv-expectDp" name="adv-expectDp">
                         <option value="0.15">15%</option>
                         <option value="0.2" selected>20%</option>
                         <option value="0.25">25%</option>
@@ -277,10 +304,10 @@
                         <option value="0.45">45%</option>
                         <option value="0.5">50%</option>
                     </select><!--adv_dp-->
-                    <input id="adv_tdp" name="adv_tdp" type="text" placeholder="TDP yang diinginkan" value="120000000" style="display:none;" onkeyup="numberize(this);" autocomplete="off" />
-                    <input id="adv_usl" name="adv_tdp" type="text" placeholder="Angsuran yang diinginkan" style="display:none;" onkeyup="numberize(this);" autocomplete="off" />
+                    <input id="adv-expectTdp" name="adv-expectTdp" type="number" value="150000000" onfocus="numberFocus(this);" onblur="numberBlur(this);" placeholder="TDP yang diinginkan" style="display:none;" autocomplete="off" />
+                    <input id="adv-expectUsl" name="adv-expectUsl" type="number" value="5500000" onfocus="numberFocus(this);" onblur="numberBlur(this);" placeholder="Angsuran yang diinginkan" style="display:none;"  autocomplete="off" />
                     
-                    <button onclick="advFormSubmit();" value="submit" class="nextButton">Lanjut</button>
+                    <button onclick="advFormSubmit();" value="submit" class="nextButton">KALKULASI</button>
                     
                 </form>
                 <br />
@@ -295,7 +322,12 @@
         </div>
         <div id="" class="block">
             <div class="spacer"></div>
-            BLOCK
+            <br />
+            <br />
+            <a href="#" onclick="window.open('http://www.google.com', '_system');">GOOGLE IT</a><br /><br />
+            <a href="#" onclick="window.open('whatsapp://send?text=LoremIpsum', '_system');">Assistance</a><br /><br />
+            <a href="#" onclick="window.open('tel:08112754802', '_system');">Call Me</a><br /><br />
+            
             <div class="footer">&nbsp;</div>
             <!-- footer -->
         </div>
