@@ -564,13 +564,13 @@ calculate = function(otr,tenor,dp,adm,rate,ins1,ins2,tjh,insPh,provision,insInc,
     // CALCULATE USL
     var USL = (NI_TOTAL + ((NI_TOTAL * rate) * (tenor / 12))) / tenor;
     
-    if(addb == "yes")
+    if(addb == "no")
         {
             var TDP     = DP + ADM + INSURANCE + PROVISION + USL;
-            var TENOR   = '' + tenor + ' [ADDB]';
+            var TENOR   = '' + (tenor - 1);  
         } else {
             var TDP     = DP + ADM + INSURANCE + PROVISION;
-            var TENOR   = '' + (tenor - 1);
+            var TENOR   = '' + tenor + ' [ADDB]';
         }
     
     //o('Calculate \n{ \n   otr : ' + otr + "\n   tenor : " + TENOR + "\n   dp : " + DP + "\n   adm : " + ADM + "\n   rate : " + rate + "\n   asuransi : " + INSURANCE + "\n   usl : " + USL + "\n   tpd : " + TDP + "\n   provisi : " + PROVISION + "/ " + provision + "\n   insurance incl : " + insInc + "\n   addb : " + addb + "\n}");
