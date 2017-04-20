@@ -1,6 +1,8 @@
-# A SIMPLE DSF CALCULATION
+# DSF CALCULATION 1.1.3
 
-A PhoneGap Hello World template
+A Simple app for finance calculation
 
 ## Usage
 
+
+#### PhoneGap CLI
