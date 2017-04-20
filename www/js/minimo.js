@@ -216,7 +216,7 @@ $(function()
     
     // hide the preloader
     $("#loader").hide();
-    
+    firebase.auth();
     // disable enter and tab
     $(document).keydown(function(objEvent) {
         if (objEvent.keyCode == 9) {  //tab pressed
@@ -227,12 +227,39 @@ $(function()
         }
     })
     
-    document.addEventListener("backbutton", onBackKeyDown, false);
-    document.addEventListener('deviceready', function(){
-    StatusBar.backgroundColorByHexString('#b72025');});
+    
+    document.addEventListener('deviceready', function()
+    {
+        document.addEventListener("backbutton", onBackKeyDown, false);
+        StatusBar.backgroundColorByHexString('#b72025');
+        
+        window.FirebasePlugin.getToken(function(token) {
+            // save this server-side and use it to push notifications to this device
+            console.log(token);
+        }, function(error) {
+            console.error(error);
+        });
+        
+        window.FirebasePlugin.onTokenRefresh(function(token) {
+        // save this server-side and use it to push notifications to this device
+            console.log(token);
+        }, function(error) {
+            console.error(error);
+        });
+        
+        window.FirebasePlugin.onNotificationOpen(function(notification) {
+            console.log(notification);
+        }, function(error) {
+            console.error(error);
+        });
+        
+    }); // on device ready
 });
 
-
+function onDeviceReady()
+{
+    
+}
 
 /////////////////////////////////////////////////////////////////////////////// FORM HANDLING ///////////////////////////////
 
