@@ -81,7 +81,7 @@
 
 
     <!-- TOASTER -->
-
+    <div id="pop">This is test notification</div>
     <div id="toast">
         <div class="toast-background"></div>
         <div class="toast-container">
@@ -115,15 +115,16 @@
         <h2>SIMULASI PEMBIAYAAN</h2>
         <p>Perhitungan ini hanya simulasi, tidak mengikat dan dapat berubah sewaktu - waktu tanpa pemberitahuan</p>
         <hr />
-        <div class="caption">HARGA OTR</div><div id="popup-otr" class="content"></div><div class="remarks"></div>
-        <div class="caption">DP MURNI</div><div id="popup-csp" class="content"></div><div class="remarks"><span id="popup-dpText"></span></div>
-        <div class="caption">ADMINISTRASI</div><div id="popup-adm" class="content"></div><div class="remarks"></div>
+        <div id="popup-tipe" class="contentTitle">ANPS DAKAR 4x2 Limited</div><div class="remarks">TYPE </div>
+        <div class="caption">HARGA OTR</div><div id="popup-otr" class="content">525.000.000</div><div class="remarks"></div>
+        <div class="caption">DP MURNI</div><div id="popup-csp" class="content">123.500.000</div><div class="remarks"><span id="popup-dpText"></span></div>
+        <div class="caption">ADMINISTRASI</div><div id="popup-adm" class="content">2.625.000</div><div class="remarks"></div>
         <div class="caption">ASURANSI</div><div id="popup-insurance" class="content">16.425.000</div><div class="remarks"><span id="popup-insText"></span></div>
-        <div class="caption">PREMI TJH</div><div id="popup-tjh" class="content"></div><div class="remarks">p.a</div>
-        <div class="caption">PROVISI</div><div id="popup-provision" class="content"></div><div id="popup-textProvision" class="remarks"></div>
-        <div class="caption">Bunga</div><div id="popup-rate" class="content"></div><div class="remarks">Flat p.a</div>
-        <div class="captionBold"><b>ANGSURAN</b></div><div class="contentBold"><b id="popup-usl"></b></div><div class="remarksBold">X <span id="popup-tenor">25</span></div>
-        <div class="captionBold"><b>TOTAL DP</b></div><div class="contentBold"><b id="popup-tdp">0</b></div><div class="remarksBold"></div>
+        <div class="caption">PREMI TJH</div><div id="popup-tjh" class="content">175.000</div><div class="remarks">p.a</div>
+        <div class="caption">PROVISI</div><div id="popup-provision" class="content">14.000.000</div><div id="popup-textProvision" class="remarks"></div>
+        <div class="caption">Bunga</div><div id="popup-rate" class="content">4.15%</div><div class="remarks">Flat p.a</div>
+        <div class="captionBold"><b>ANGSURAN</b></div><div class="contentBold"><b id="popup-usl">14.750.000</b></div><div class="remarksBold">X <span id="popup-tenor">25</span></div>
+        <div class="captionBold"><b>TOTAL DP</b></div><div class="contentBold"><b id="popup-tdp">250.000.000</b></div><div class="remarksBold"></div>
     </div>
     <!--popup-->
     <div id="newCalc" onclick="selectContent('calculation');">&nbsp;</div>
@@ -157,8 +158,8 @@
                 
                 <div id="spacer" style="height:50px;">&nbsp;</div>
                 <div id="calcMenu">
-                    <div id="tabAuto" class="calcTab" onclick="javascript:selectCalculation('auto');">AUTOMATIC</div>
-                    <div id="tabManual" class="calcTabActive" onclick="javascript:selectCalculation('manual');">MANUAL</div>
+                    <div id="tabAuto" class="calcTabActive" onclick="javascript:selectCalculation('auto');">AUTOMATIC</div>
+                    <div id="tabManual" class="calcTab" onclick="javascript:selectCalculation('manual');">MANUAL</div>
                     <div id="tabMarker">&nbsp;</div>
                 </div>
                 <!-- calcMenu -->
@@ -169,19 +170,38 @@
                     <div id="calc_auto" class="calcPanel">
                         <div ="manualSlide2" class="slide"><!--manualSlide1-->
                 <form onsubmit="return false;">
+                    <div class="caption">Pilih kategori kendaraan</div>
+                    <select id="auto-category" name="auto_category" onchange="ChangeCatList()"> 
+                        <option value="#">-- Pilih Kategori</option>
+                        <option value="Pajero">Mitsubishi All New Pajero</option>
+                        <option value="Mirage" disabled>Mitsubishi New Mirage</option>
+                        <option value="Outlander">Mitsubishi New Outlander</option>
+                        <option value="Fuso">Mitsubishi FUSO Series</option>
+                        <option value="FE Normal">Mitsubishi FE (Normal)</option>
+                        <option value="FE Spesial">Mitsubishi FE (Spesial)</option>
+                        <option value="L300">Mitsubishi L300 Series</option>
+                        <option value="ColtT">Mitsubishi Colt T120 SS</option>
+                    </select>
+                    
+                    <div class="caption">Pilih tipe kendaraan</div>
+                    <select id="auto-type" name="auto-type" onchange="selectType()">
+                        <option value="#">-- Silahkan pilih kategori</option>
+                    </select> 
                     <div class="caption">Masukan harga OTR</div>
-                    <input id="auto_otr" name="auto_otr" value="440,000,000" type="text" placeholder="Harga OTR" onkeyup="numberize(this);" autocomplete="off" />
+                    <input id="auto-otr" name="auto-otr" type="number" placeholder="Harga OTR" value="306000000" onfocus="numberFocus(this);" onblur="numberBlur(this);" autocomplete="off" />
                     <div class="caption">Pilih Tenor kredit</div>
-                    <select id="auto_tenor" name="auto_tenor">
+                    <select id="auto-tenor" name="auto-tenor">
+                        <option value="">-- Pilih Tenor</option>
                         <option value="12">12 month fixed</option>
                         <option value="24">24 month fixed</option>
                         <option value="25">25 month fixed</option>
-                        <option value="36" selected>36 month fixed</option>
+                        <option value="36">36 month fixed</option>
                         <option value="48">48 month fixed</option>
                         <option value="60">60 month fixed</option>
                     </select><!--adv_tenor-->
                     <div class="caption">Pilih jenis asuransi</div>
-                    <select id="adv_insurance" name="adv_insurance">
+                    <select id="auto-insurance" name="auto-insurance">
+                        <option value="">-- Pilih Kategori</option>
                         <option value="CV">CV Allrisk</option>
                         <option value="TLO">CV TLO</option>
                         <option value="PC">PC Allrisk</option>
@@ -189,35 +209,32 @@
                         <option value="BUSTLO">Bus TLO</option>
                     </select><!--adv_tenor-->
                     
-                    <div class="caption">Persentase bunga per tahun (% flat)</div>
-                    <input id="auto_rate" name="auto_rate" type="decimal" value="4.15" onblur="percentize(this);" autocomplete="off" />
-                    
                     <div class="caption">Masukan premi TJH / TPL per tahun</div>
-                    <input id="auto_tjh" name="auto_tjh" type="text" onkeyup="numberize(this);" autocomplete="off" />
+                    <input id="auto-tjh" name="auto-tjh" type="number" onfocus="numberFocus(this);" onblur="numberBlur(this);" autocomplete="off" />
                     
                     <div class="caption">Masukan provisi (%)</div>
-                    <input id="auto_prov" name="auto_prov" type="decimal" onblur="percentize(this);" autocomplete="off" />
+                    <input id="auto-provision" name="auto-provision" type="decimal" onfocus="numberFocus(this);" onblur="inputPercentize(this);" autocomplete="off" />
                     
                     <div class="caption">Asuransi masuk PH</div>
-                    <div id="auto_insIncToggle" onclick="autoInsIncToggle();" class="miniToggler">&nbsp;</div>
-                    <input id="advInsInc" name="advInsInc" value="no" class="inputHidden" />
+                    <div id="auto-insIncToggle" onclick="autoInsIncToggle();" class="miniToggler">&nbsp;</div>
+                    <input id="auto-insInclude" name="auto-InsInclude" value="no" class="inputHidden" />
                     
                     <div class="caption">Angsuran dibayar dibelakang (ADDB)</div>
-                    <div id="auto_addbToggle" onclick="autoAddbToggle();" class="miniToggler">&nbsp;</div>
-                    <input id="autoAddb" name="autoAddb" value="no" class="inputHidden" />
+                    <div id="auto-addbToggle" onclick="autoAddbToggle();" class="miniToggler">&nbsp;</div>
+                    <input id="auto-addb" name="auto-addb" value="no" class="inputHidden" />
                     
                     <div class="caption">Ada NPWP</div>
-                    <div id="autov_npwpToggle" onclick="autoNpwpToggle();" class="miniToggler">&nbsp;</div>
-                    <input id="autoNpwp" name="autoNpwp" value="no" class="inputHidden" />
+                    <div id="auto-npwpToggle" onclick="autoNpwpToggle();" class="miniToggler">&nbsp;</div>
+                    <input id="auto-npwp" name="auto-npwp" value="no" class="inputHidden" />
                     
                     <div class="caption">Metode perhitungan</div>
-                    <select id="auto_method" name="auto_method" onchange="autoMethod();">
-                        <option value="dp">Persentase DP</option>
-                        <option value="tdp">Total pembayaran</option>
-                        <option value="usl">Angsuran tertentu</option>
+                    <select id="auto-method" name="auto-method" onchange="autoMethodSelector();">
+                        <option value="DP">Persentase DP</option>
+                        <option value="TDP">Total pembayaran</option>
+                        <option value="USL">Angsuran tertentu</option>
                     </select><!--adv_method-->
                     
-                    <select id="auto_dp" name="auto_dp">
+                    <select id="auto-expectDp" name="auto-expectDp">
                         <option value="0.15">15%</option>
                         <option value="0.2" selected>20%</option>
                         <option value="0.25">25%</option>
@@ -227,10 +244,10 @@
                         <option value="0.45">45%</option>
                         <option value="0.5">50%</option>
                     </select><!--adv_dp-->
-                    <input id="auto_tdp" name="auto_tdp" type="text" placeholder="TDP yang diinginkan" value="120000000" style="display:none;" onkeyup="numberize(this);" autocomplete="off" />
-                    <input id="auto_usl" name="auto_tdp" type="text" placeholder="Angsuran yang diinginkan" style="display:none;" onkeyup="numberize(this);" autocomplete="off" />
+                    <input id="auto-expectTdp" name="auto-expectTdp" type="number" placeholder="TDP yang diinginkan" value="120000000" style="display:none;" onkeyup="numberBlur(this);" autocomplete="off" />
+                    <input id="auto-expectUsl" name="auto-expectUsl" type="number" placeholder="Angsuran yang diinginkan" style="display:none;" onkeyup="numberBlur(this);" autocomplete="off" />
                     
-                    <button onclick="advFormSubmit();" value="submit" class="nextButton">Lanjut</button>
+                    <button onclick="autoFormSubmit();" value="submit" class="nextButton">Lanjut</button>
                     
                 </form>
                 <br />
@@ -242,7 +259,7 @@
             <div ="manualSlide1" class="slide"><!--manualSlide1-->
                 <form onsubmit="return false;">
                     <div class="caption">Masukan harga OTR</div>
-                    <input id="adv-otr" name="adv-otr" onfocus="numberFocus(this);" onblur="numberBlur(this);" type="number" value="525000000" placeholder="Harga OTR" autocomplete="off" />
+                    <input id="adv-otr" name="adv-otr" onfocus="numberFocus(this);" onblur="numberBlur(this);" type="number" placeholder="Harga OTR" autocomplete="off" />
                     <div class="caption">Pilih Tenor kredit</div>
                     <select id="adv-tenor" name="adv-tenor">
                         <option value="12">12 month fixed</option>
@@ -262,16 +279,16 @@
                     </select><!--adv_tenor-->
                     
                     <div class="caption">Persentase bunga per tahun (% flat)</div>
-                    <input id="adv-rate" name="adv-rate" type="decimal" value="4.15%" onblur="inputPercentize(this);" autocomplete="off" />
+                    <input id="adv-rate" name="adv-rate" type="decimal" onfocus="numberFocus(this);" onblur="inputPercentize(this);" autocomplete="off" />
                     
                     <div class="caption">Masukan biaya Administrasi</div>
-                    <input id="adv-adm" name="adv-adm" value="2325000" type="number" onfocus="numberFocus(this);" onblur="numberBlur(this);" autocomplete="off" />
+                    <input id="adv-adm" name="adv-adm" type="number" onfocus="numberFocus(this);" onblur="numberBlur(this);" autocomplete="off" />
                     
                     <div class="caption">Masukan premi TJH / TPL per tahun</div>
                     <input id="adv-tjh" name="adv-tjh" type="number" onfocus="numberFocus(this);" onblur="numberBlur(this);" autocomplete="off" />
                     
                     <div class="caption">Masukan provisi (%)</div>
-                    <input id="adv-provision" name="adv-provision" value="2%" type="decimal" onblur="inputPercentize(this);" autocomplete="off" />
+                    <input id="adv-provision" name="adv-provision" type="decimal" onfocus="numberFocus(this);" onblur="inputPercentize(this);" autocomplete="off" />
                     
                     <div class="caption">Asuransi masuk PH</div>
                     <div id="adv-insIncToggle" onmouseup="advInsIncToggle();" class="miniToggler">&nbsp;</div>
@@ -280,12 +297,6 @@
                     <div class="caption">Angsuran dibayar dibelakang (ADDB)</div>
                     <div id="adv-addbToggle" onmouseup="advAddbToggle();" class="miniToggler">&nbsp;</div>
                     <input id="adv-addb" name="adv-addb" value="no" class="inputHidden" />
-                    
-                    <div class="caption">Param min CSP</div>
-                    <input id="adv-minDp" name="adv-tjh" type="number" autocomplete="off" />
-                    
-                    <div class="caption">Param max CSP</div>
-                    <input id="adv-maxDp" name="adv-tjh" type="number" autocomplete="off" />
                     
                     <div class="caption">Metode perhitungan</div>
                     <select id="adv-method" name="adv-method" onchange="advMethodSelector();">
@@ -322,24 +333,31 @@
         </div>
         <div id="" class="block">
             <div class="spacer"></div>
-            <br />
-            <br />
-            <a href="#" onclick="window.open('http://www.google.com', '_system');">GOOGLE IT</a><br /><br />
-            <a href="#" onclick="window.open('whatsapp://send?text=LoremIpsum', '_system');">Assistance</a><br /><br />
-            <a href="#" onclick="window.open('tel:08112754802', '_system');">Call Me</a><br /><br />
             
+            <!------------------------------------------------------------------------------------------------------------------------------------>
+                <br />
+                <br />
+                <a href="#" oncontextmenu="pop('Copied');" onclick="pop('Saved !');">GOOGLE IT</a><br /><br />
+                <a href="#" onclick="window.open('whatsapp://send?text=LoremIpsum', '_system');">Assistance</a><br /><br />
+                <a href="#" onclick="window.open('tel:08112754802', '_system');">Call Me</a><br /><br />
+            <!------------------------------------------------------------------------------------------------------------------------------------>
             <div class="footer">&nbsp;</div>
             <!-- footer -->
         </div>
         <div id="" class="block">
             <div class="spacer"></div>
-            lorem<br />ipsum<br />dolor<br />sit
+            
+            <!------------------------------------------------------------------------------------------------------------------------------------>
+                lorem<br />ipsum<br />dolor<br />sit
+            <!------------------------------------------------------------------------------------------------------------------------------------>
             <div class="footer"></div>
             <!-- footer -->
         </div>
         <div id="contentHelp" class="block-clean">
             <div class="spacer"></div>
-            NEWS HERE
+            <!------------------------------------------------------------------------------------------------------------------------------------>
+            
+            <!------------------------------------------------------------------------------------------------------------------------------------>
             <div class="footer"></div>
             <!-- footer -->
         </div>
@@ -357,17 +375,3 @@
 
 </html>
 <!-- document footer end -->
-
-<script src="https://www.gstatic.com/firebasejs/3.8.0/firebase.js"></script>
-<script>
-  // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyBqi508tTujR2cL8z7uNti60CFNM0ui7GQ",
-    authDomain: "dsf-notifier.firebaseapp.com",
-    databaseURL: "https://dsf-notifier.firebaseio.com",
-    projectId: "dsf-notifier",
-    storageBucket: "dsf-notifier.appspot.com",
-    messagingSenderId: "341691878944"
-  };
-  firebase.initializeApp(config);
-</script>
