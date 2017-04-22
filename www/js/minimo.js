@@ -243,6 +243,22 @@ $(function () {
             objEvent.preventDefault(); // stops its action
         }
     })
+    
+    // Get Coordinate
+    var onSuccess = function(position) {
+        o('Lat: '+ position.coords.latitude + '\n' +'Long: ' + position.coords.longitude + '\n' );
+    };
+
+    // onError Callback receives a PositionError object
+    //
+    function onError(error) {
+        pop('Welcome');
+    }
+
+    navigator.geolocation.getCurrentPosition(onSuccess, onError);
+    
+    loadNews('#content-help','https://a9325522.000webhostapp.com/api/mod_news.php');
+
 });
 
 
@@ -1329,6 +1345,32 @@ calculateValue = function (otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal,
             return USL;
             break;
     }
+}
+
+loadNews = function(target, url)
+{
+    $(target).load(url, function(responseTxt, statusTxt, xhr){
+        if(statusTxt == "success")
+            pop("Content loaded successfully!");
+        
+            var acc = document.getElementsByClassName("accordion");
+            var i;
+
+            for (i = 0; i < acc.length; i++) {
+              acc[i].onclick = function() {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.maxHeight){
+                  panel.style.maxHeight = null;
+                    
+                } else {
+                  panel.style.maxHeight = panel.scrollHeight + "px";
+                } 
+              }
+            }
+        if(statusTxt == "error")
+            toast("Error: " + xhr.status + ": " + xhr.statusText);
+    });
 }
 
 ratePicker = function(package,tenor,dp){
