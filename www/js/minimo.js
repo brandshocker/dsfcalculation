@@ -46,7 +46,6 @@ pop = function (msg, t) {
 
 }
 
-// Close Navigation
 navClose = function () {
     // o('Navigation panel close');
 
@@ -67,7 +66,6 @@ navClose = function () {
     active = "none"
 }
 
-// Show minimo box
 showMinimo = function () {
     $('#minimo').css({
         "left": "0px",
@@ -79,7 +77,6 @@ showMinimo = function () {
     StatusBar.hide();
 }
 
-// Hide minimo box
 hideMinimo = function () {
     $('#minimo').css('opacity', '0');
     setTimeout(function () {
@@ -92,19 +89,19 @@ hideMinimo = function () {
     StatusBar.show();
 }
 
-function showPopup() {
+showPopup = function() {
     $('#popup').css('margin-left', '0%');
     active = "popup";
     StatusBar.hide();
 }
 
-function hidePopup() {
+hidePopup = function() {
     $('#popup').css('margin-left', '100%');
     active = "none";
     StatusBar.show();
 }
 
-function setPopup(ele, val) {
+setPopup = function(ele, val) {
     if (val == null) {
         val = "&nbsp;";
     }
@@ -174,8 +171,6 @@ selectCalculation = function (e) {
 
 }
 
-
-// Content seletor
 selectContent = function (i) {
     if (i == "calculation") {
         navClose();
@@ -225,7 +220,6 @@ window.onload = function () {
     o('===================');
 
 }
-
 
 // Preload jquery
 $(function () {
@@ -284,7 +278,7 @@ rc = function (i) {
     o(i + " : " + obj);
 };
 
-function numberize(input) {
+numberize = function(input) {
     var nStr = input.value + '';
     nStr = nStr.replace(/\,/g, "");
     var x = nStr.split('.');
@@ -351,7 +345,6 @@ numberBlur = function (i) {
     numberize(i);
 }
 
-// percentize
 inputPercentize = function (input) {
     var str = input.value.replace(/%/g, "");
 
@@ -508,13 +501,73 @@ autoFormSubmit = function () {
                 switch (autoMethod) {
                     case "DP":
                         o('Auto calculation by DP');
-                            autoCalculate(package,autoOtr,autoTenor, autoExpectDp, autoAdm, ins1, insuranceTotal, autoTjh, tjhTotal, insuranceNI, autoProvision, autoInsInclude, autoAddb);
+                        autoCalculate(package, autoOtr, autoTenor, autoExpectDp, autoAdm, ins1, insuranceTotal, autoTjh, tjhTotal, insuranceNI, autoProvision, autoInsInclude, autoAddb);
                         break;
                     case "TDP":
                         o('Auto calculation by USL');
+                        var proceed = false;
+                        if (autoExpectTdp == '') {
+                            toast('Silahkan masukan TDP');
+                        } else {
+                            var expectDp = autoTdpCalculate(autoExpectTdp, autoOtr, autoTenor, 0.5, autoAdm, package, ins1, insuranceTotal, autoTjh, tjhTotal, insuranceNI, autoProvision, autoInsInclude, autoAddb);
+                            if (expectDp == false) {
+                                toast('Perhitungan tidak ditemukan');
+                            } else {
+                                switch (autoInsurance) {
+                                    case "PC":
+                                        if (expectDp < 0.2) {
+                                            toast('DP untuk PC minimal 20%')
+                                        } else {
+                                            proceed = true;
+                                        }
+                                        break;
+                                    default:
+                                        if (expectDp < 0.1) {
+                                            toast('DP minimal 10%')
+                                        } else {
+                                            proceed = true;
+                                        }
+                                        break;
+                                }
+
+                                if (proceed == true) {
+                                    autoCalculate(package, autoOtr, autoTenor, expectDp, autoAdm, ins1, insuranceTotal, autoTjh, tjhTotal, insuranceNI, autoProvision, autoInsInclude, autoAddb);
+                                }
+                            }
+                        }
                         break;
                     case "USL":
                         o('Auto calculation by USL');
+                        var proceed = false;
+                        if (autoExpectUsl == '') {
+                            toast('Silahkan masukan TDP');
+                        } else {
+                            var expectDp = autoUslCalculate(autoExpectUsl, autoOtr, autoTenor, 0.5, autoAdm, package, ins1, insuranceTotal, autoTjh, tjhTotal, insuranceNI, autoProvision, autoInsInclude, autoAddb);
+                            if (expectDp == false) {
+                                toast('Perhitungan tidak ditemukan');
+                            } else {
+                                switch (autoInsurance) {
+                                    case "PC":
+                                        if (expectDp < 0.2) {
+                                            toast('DP untuk PC minimal 20%')
+                                        } else {
+                                            proceed = true;
+                                        }
+                                        break;
+                                    default:
+                                        if (expectDp < 0.1) {
+                                            toast('DP minimal 10%')
+                                        } else {
+                                            proceed = true;
+                                        }
+                                        break;
+                                }
+
+                                if (proceed == true) {
+                                    autoCalculate(package, autoOtr, autoTenor, expectDp, autoAdm, ins1, insuranceTotal, autoTjh, tjhTotal, insuranceNI, autoProvision, autoInsInclude, autoAddb);
+                                }
+                            }
+                        }
                         break;
                     default:
                         toast('Invalid method')
@@ -884,7 +937,7 @@ autoCalculate = function (package, otr, tenor, dp, adm, ins1, ins2, tjh, tjhTota
             }
             break;
     }
-    
+
     rate = rate / 100;
 
     // o('DP : ' + DP + ', NI PURE : ' + NI_PURE + ", PROVISION : " + PROVISION); // CHECK RESULT
@@ -947,8 +1000,7 @@ autoCalculate = function (package, otr, tenor, dp, adm, ins1, ins2, tjh, tjhTota
     navigator.vibrate(50);
 }
 
-calculateValue = function (otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb, result) {
-    // o('Calculate \n{ \n   otr : ' + otr + "\n   tenor : " + tenor + "\n   dp : " + dp + "\n   adm : " + adm + "\n   rate : " + rate + "\n   ins1 : " + ins1 + "\n   ins2 : " + ins2 + "\n   tjh : " + tjh + "\n   insPh : " + insPh + "\n   provision : " + provision + "\n   insIncl : " + insInc + "\n   addb : " + addb + "\n}")
+autoTdpCalculate = function(findTdp, otr, tenor, dp, adm, package, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb) {
     var ADM = adm;
     var DP = otr * dp;
     var DP_PERCENT = ((dp * 100).toFixed(2)) + " %";
@@ -956,7 +1008,58 @@ calculateValue = function (otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal,
     var PROVISION = NI_PURE * provision;
     var TJH = tjh;
 
-    // o('DP : ' + DP + ', NI PURE : ' + NI_PURE + ", PROVISION : " + PROVISION); // CHECK RESULT
+    if (insInc == 'yes') {
+        NI_TOTAL = NI_PURE + insPh;
+        INSURANCE = ins1;
+        INSTEXT = 'Th Pertama'
+        TJH = tjh;
+    } else {
+        NI_TOTAL = NI_PURE;
+        INSURANCE = ins2;
+        INSTEXT = 'Dimuka';
+        TJH = tjhTotal;
+    }
+    
+    rate = ratePicker(package,tenor,dp);
+
+    // CALCULATE USL
+    var USL = (NI_TOTAL + ((NI_TOTAL * rate) * (tenor / 12))) / tenor;
+
+    if (addb == "no") {
+        var TDP = DP + ADM + INSURANCE + PROVISION + TJH + USL;
+        var TENOR = '' + (tenor - 1);
+    } else {
+        var TDP = DP + ADM + INSURANCE + PROVISION + TJH;
+        var TENOR = '' + tenor + ' [ADDB]';
+    }
+
+    if (TDP == findTdp) {
+        iteration = 1;
+        $('#loader').hide();
+        return dp;
+    } else {
+        if (iteration < 500) {
+            iteration++
+            var newDp = ((DP / (TDP / Number(findTdp))));
+            newDp = (newDp / otr);
+            o(iteration + ' > tdp : ' + format(TDP) + ' Expect : ' + format(findTdp));
+            return autoTdpCalculate(findTdp, otr, tenor, newDp, adm, package, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb);
+        } else {
+            $('#loader').hide();
+            iteration = 1;
+            return false;
+        }
+
+    }
+};
+
+advTdpCalculate = function(findTdp, otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb) {
+    var ADM = adm;
+    var DP = otr * dp;
+    var DP_PERCENT = ((dp * 100).toFixed(2)) + " %";
+    var NI_PURE = otr - DP;
+    var PROVISION = NI_PURE * provision;
+    var TJH = tjh;
 
     if (insInc == 'yes') {
         NI_TOTAL = NI_PURE + insPh;
@@ -981,15 +1084,140 @@ calculateValue = function (otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal,
         var TENOR = '' + tenor + ' [ADDB]';
     }
 
-    switch (result) {
-        case "TDP":
-            return TDP;
-            break;
-        case "USL":
-            return USL;
-            break;
+    if (TDP == findTdp) {
+        iteration = 1;
+        $('#loader').hide();
+        return dp;
+    } else {
+        if (iteration < 500) {
+            iteration++
+            var newDp = ((DP / (TDP / Number(findTdp))));
+            newDp = (newDp / otr);
+            o(iteration + ' > tdp : ' + format(TDP) + ' Expect : ' + format(findTdp));
+            return advTdpCalculate(findTdp, otr, tenor, newDp, adm, rate, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb);
+        } else {
+            $('#loader').hide();
+            iteration = 1;
+            return false;
+        }
+
     }
-}
+};
+
+autoUslCalculate = function(findUsl, otr, tenor, dp, adm, package, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb) {
+    var ADM = adm;
+    var DP = otr * dp;
+    var DP_PERCENT = ((dp * 100).toFixed(2)) + " %";
+    var NI_PURE = otr - DP;
+    var PROVISION = NI_PURE * provision;
+    var TJH = tjh;
+
+    if (insInc == 'yes') {
+        NI_TOTAL = NI_PURE + insPh;
+        INSURANCE = ins1;
+        TJH = tjh;
+    } else {
+        NI_TOTAL = NI_PURE;
+        INSURANCE = ins2;
+        TJH = tjhTotal;
+    }
+
+    rate = ratePicker(package,tenor,dp);
+
+    // CALCULATE USL
+    var USL = (NI_TOTAL + ((NI_TOTAL * rate) * (tenor / 12))) / tenor;
+
+    if (addb == "no") {
+        var TDP = DP + ADM + INSURANCE + PROVISION + TJH + USL;
+        var TENOR = '' + (tenor - 1);
+    } else {
+        var TDP = DP + ADM + INSURANCE + PROVISION + TJH;
+        var TENOR = '' + tenor + ' [ADDB]';
+    }
+    
+    if (iteration == 999) {
+        var spread = USL - findUsl;
+        if (spread < 1000) {
+            USL = findUsl;
+        } else if (spread < 0 && spread > -1000) {
+            USL = findUsl;
+        }
+    }
+
+    if (USL == findUsl) {
+        iteration = 1;
+        $('#loader').hide();
+        return dp;
+    } else {
+        if (iteration < 1000) {
+            iteration++
+            var newDp = ((DP / (Number(findUsl) / USL)));
+            newDp = (newDp / otr);
+            o(iteration + ' > tdp : ' + format(TDP) + ' Expect : ' + format(findUsl) + '  dp : ' + newDp);
+            return autoUslCalculate(findUsl, otr, tenor, newDp, adm, package, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb);
+        } else {
+            $('#loader').hide();
+            iteration = 1;
+            return false;
+        }
+
+    }
+};
+
+advUslCalculate = function(findUsl, otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb) {
+    var ADM = adm;
+    var DP = otr * dp;
+    var NI_PURE = otr - DP;
+    var PROVISION = NI_PURE * provision;
+    var TJH = tjh;
+
+    if (insInc == 'yes') {
+        NI_TOTAL = NI_PURE + insPh;
+        INSURANCE = ins1;
+        INSTEXT = 'Th Pertama'
+        TJH = tjh;
+    } else {
+        NI_TOTAL = NI_PURE;
+        INSURANCE = ins2;
+        INSTEXT = 'Dimuka';
+        TJH = tjhTotal;
+    }
+
+    // CALCULATE USL
+    var USL = (NI_TOTAL + ((NI_TOTAL * rate) * (tenor / 12))) / tenor;
+
+    if (addb == "no") {
+        var TDP = DP + ADM + INSURANCE + PROVISION + TJH + USL;
+    } else {
+        var TDP = DP + ADM + INSURANCE + PROVISION + TJH;
+    }
+    if (iteration == 999) {
+        var spread = USL - findUsl;
+        if (spread < 1000) {
+            USL = findUsl;
+        } else if (spread < 0 && spread > -1000) {
+            USL = findUsl;
+        }
+    }
+    if (USL == findUsl) {
+        iteration = 1;
+        $('#loader').hide();
+        return dp;
+    } else {
+        if (iteration < 1000) {
+            iteration++
+            var newDp = (DP / (Number(findUsl) / USL));
+            newDp = (newDp / otr);
+            o(iteration + ' > Usl : ' + format(USL) + ' Expect : ' + format(findUsl) + ' Dp : ' + newDp);
+            return advUslCalculate(findUsl, otr, tenor, newDp, adm, rate, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb);
+        } else {
+            iteration = 1;
+            $('#loader').hide();
+            return false;
+        }
+
+    }
+};
 
 calculate = function (otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb) {
     // o('Calculate \n{ \n   otr : ' + otr + "\n   tenor : " + tenor + "\n   dp : " + dp + "\n   adm : " + adm + "\n   rate : " + rate + "\n   ins1 : " + ins1 + "\n   ins2 : " + ins2 + "\n   tjh : " + tjh + "\n   insPh : " + insPh + "\n   provision : " + provision + "\n   insIncl : " + insInc + "\n   addb : " + addb + "\n}")
@@ -1059,13 +1287,16 @@ calculate = function (otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal, insP
     navigator.vibrate(50);
 }
 
-function advTdpCalculate(findTdp, otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb) {
+calculateValue = function (otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb, result) {
+    // o('Calculate \n{ \n   otr : ' + otr + "\n   tenor : " + tenor + "\n   dp : " + dp + "\n   adm : " + adm + "\n   rate : " + rate + "\n   ins1 : " + ins1 + "\n   ins2 : " + ins2 + "\n   tjh : " + tjh + "\n   insPh : " + insPh + "\n   provision : " + provision + "\n   insIncl : " + insInc + "\n   addb : " + addb + "\n}")
     var ADM = adm;
     var DP = otr * dp;
     var DP_PERCENT = ((dp * 100).toFixed(2)) + " %";
     var NI_PURE = otr - DP;
     var PROVISION = NI_PURE * provision;
     var TJH = tjh;
+
+    // o('DP : ' + DP + ', NI PURE : ' + NI_PURE + ", PROVISION : " + PROVISION); // CHECK RESULT
 
     if (insInc == 'yes') {
         NI_TOTAL = NI_PURE + insPh;
@@ -1090,80 +1321,125 @@ function advTdpCalculate(findTdp, otr, tenor, dp, adm, rate, ins1, ins2, tjh, tj
         var TENOR = '' + tenor + ' [ADDB]';
     }
 
-    if (TDP == findTdp) {
-        iteration = 1;
-        $('#loader').hide();
-        return dp;
-    } else {
-        if (iteration < 500) {
-            iteration++
-            var newDp = ((DP / (TDP / Number(findTdp))));
-            newDp = (newDp / otr);
-            o(iteration + ' > tdp : ' + format(TDP) + ' Expect : ' + format(findTdp));
-            return advTdpCalculate(findTdp, otr, tenor, newDp, adm, rate, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb);
-        } else {
-            $('#loader').hide();
-            iteration = 1;
-            return false;
-        }
-
+    switch (result) {
+        case "TDP":
+            return TDP;
+            break;
+        case "USL":
+            return USL;
+            break;
     }
-};
+}
 
-function advUslCalculate(findUsl, otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb) {
-    var ADM = adm;
-    var DP = otr * dp;
-    var NI_PURE = otr - DP;
-    var PROVISION = NI_PURE * provision;
-    var TJH = tjh;
-
-    if (insInc == 'yes') {
-        NI_TOTAL = NI_PURE + insPh;
-        INSURANCE = ins1;
-        INSTEXT = 'Th Pertama'
-        TJH = tjh;
-    } else {
-        NI_TOTAL = NI_PURE;
-        INSURANCE = ins2;
-        INSTEXT = 'Dimuka';
-        TJH = tjhTotal;
+ratePicker = function(package,tenor,dp){
+    switch (tenor) {
+        case "12":
+            if (dp >= 0.1 && dp < 0.15) {
+                rate = package['a1'];
+            } else if (dp >= 0.15 && dp < 0.2) {
+                rate = package['a2'];
+            } else if (dp >= 0.2 && dp < 0.25) {
+                rate = package['a3'];
+            } else if (dp >= 0.25 && dp < 0.3) {
+                rate = package['a4'];
+            } else if (dp >= 0.3 && dp < 0.35) {
+                rate = package['a5'];
+            } else if (dp >= 0.35 && dp < 0.4) {
+                rate = package['a6'];
+            } else if (dp >= 0.4 && dp < 1) {
+                rate = package['a7'];
+            }
+            break;
+        case "24":
+            if (dp >= 0.1 && dp < 0.15) {
+                rate = package['b1'];
+            } else if (dp >= 0.15 && dp < 0.2) {
+                rate = package['b2'];
+            } else if (dp >= 0.2 && dp < 0.25) {
+                rate = package['b3'];
+            } else if (dp >= 0.25 && dp < 0.3) {
+                rate = package['b4'];
+            } else if (dp >= 0.3 && dp < 0.35) {
+                rate = package['b5'];
+            } else if (dp >= 0.35 && dp < 0.4) {
+                rate = package['b6'];
+            } else if (dp >= 0.4 && dp < 1) {
+                rate = package['b7'];
+            }
+            break;
+        case "25":
+            if (dp >= 0.1 && dp < 0.15) {
+                rate = package['b1'];
+            } else if (dp >= 0.15 && dp < 0.2) {
+                rate = package['b2'];
+            } else if (dp >= 0.2 && dp < 0.25) {
+                rate = package['b3'];
+            } else if (dp >= 0.25 && dp < 0.3) {
+                rate = package['b4'];
+            } else if (dp >= 0.3 && dp < 0.35) {
+                rate = package['b5'];
+            } else if (dp >= 0.35 && dp < 0.4) {
+                rate = package['b6'];
+            } else if (dp >= 0.4 && dp < 1) {
+                rate = package['b7'];
+            }
+            break;
+        case "36":
+            if (dp >= 0.1 && dp < 0.15) {
+                rate = package['c1'];
+            } else if (dp >= 0.15 && dp < 0.2) {
+                rate = package['c2'];
+            } else if (dp >= 0.2 && dp < 0.25) {
+                rate = package['c3'];
+            } else if (dp >= 0.25 && dp < 0.3) {
+                rate = package['c4'];
+            } else if (dp >= 0.3 && dp < 0.35) {
+                rate = package['c5'];
+            } else if (dp >= 0.35 && dp < 0.4) {
+                rate = package['c6'];
+            } else if (dp >= 0.4 && dp < 1) {
+                rate = package['c7'];
+            }
+            break;
+        case "48":
+            if (dp >= 0.1 && dp < 0.15) {
+                rate = package['d1'];
+            } else if (dp >= 0.15 && dp < 0.2) {
+                rate = package['d2'];
+            } else if (dp >= 0.2 && dp < 0.25) {
+                rate = package['d3'];
+            } else if (dp >= 0.25 && dp < 0.3) {
+                rate = package['d4'];
+            } else if (dp >= 0.3 && dp < 0.35) {
+                rate = package['d5'];
+            } else if (dp >= 0.35 && dp < 0.4) {
+                rate = package['d6'];
+            } else if (dp >= 0.4 && dp < 1) {
+                rate = package['d7'];
+            }
+            break;
+        case "60":
+            if (dp >= 0.1 && dp < 0.15) {
+                rate = package['e1'];
+            } else if (dp >= 0.15 && dp < 0.2) {
+                rate = package['e2'];
+            } else if (dp >= 0.2 && dp < 0.25) {
+                rate = package['e3'];
+            } else if (dp >= 0.25 && dp < 0.3) {
+                rate = package['e4'];
+            } else if (dp >= 0.3 && dp < 0.35) {
+                rate = package['e5'];
+            } else if (dp >= 0.35 && dp < 0.4) {
+                rate = package['e6'];
+            } else if (dp >= 0.4 && dp < 1) {
+                rate = package['e7'];
+            }
+            break;
     }
 
-    // CALCULATE USL
-    var USL = (NI_TOTAL + ((NI_TOTAL * rate) * (tenor / 12))) / tenor;
-
-    if (addb == "no") {
-        var TDP = DP + ADM + INSURANCE + PROVISION + TJH + USL;
-    } else {
-        var TDP = DP + ADM + INSURANCE + PROVISION + TJH;
-    }
-    if (iteration == 999) {
-        var spread = USL - findUsl;
-        if (spread < 1000) {
-            USL = findUsl;
-        } else if (spread < 0 && spread > -1000) {
-            USL = findUsl;
-        }
-    }
-    if (USL == findUsl) {
-        iteration = 1;
-        $('#loader').hide();
-        return dp;
-    } else {
-        if (iteration < 1000) {
-            iteration++
-            var newDp = (DP / (Number(findUsl) / USL));
-            newDp = (newDp / otr);
-            o(iteration + ' > Usl : ' + format(USL) + ' Expect : ' + format(findUsl) + ' Dp : ' + newDp);
-            return advUslCalculate(findUsl, otr, tenor, newDp, adm, rate, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb);
-        } else {
-            iteration = 1;
-            $('#loader').hide();
-            return false;
-        }
-
-    }
-};
+    rate = rate / 100;
+    return rate;
+}
 
 selectType = function () {
     var selected = $('#auto-type').val();
@@ -1197,7 +1473,7 @@ carsAndModels['FE Spesial'] = ['-- Silahkan pilih kategori', 'SP FE 71', 'SP FE 
 carsAndModels['L300'] = ['-- Silahkan pilih kategori', 'L300 FB/FD', 'L300 Standard', 'L300 Minibus'];
 carsAndModels['ColtT'] = ['-- Silahkan pilih kategori', 'Colt T120 SS FB/FD', 'Colt T120 SS Standard', 'Colt T120 SS 3 Ways'];
 
-function ChangeCatList() {
+ChangeCatList = function() {
     var carList = document.getElementById("auto-category");
     var modelList = document.getElementById("auto-type");
     var selCar = carList.options[carList.selectedIndex].value;
@@ -1262,7 +1538,6 @@ function ChangeCatList() {
     }
 }
 
-
 advMethodSelector = function () {
     navigator.vibrate(40);
     var sel = r('#adv-method');
@@ -1321,7 +1596,7 @@ insurancePick = function (price, arr) {
     }
 }
 
-function autoInsIncToggle() {
+autoInsIncToggle = function() {
     navigator.vibrate(30);
 
     if ($('#auto-insInclude').val() == "no") {
@@ -1335,7 +1610,7 @@ function autoInsIncToggle() {
     }
 }
 
-function autoAddbToggle() {
+autoAddbToggle = function() {
     navigator.vibrate(30);
 
     if ($('#auto-addb').val() == "no") {
@@ -1349,7 +1624,7 @@ function autoAddbToggle() {
     }
 };
 
-function autoNpwpToggle() {
+autoNpwpToggle = function() {
     navigator.vibrate(30);
 
     if ($('#auto-npwp').val() == "no") {
@@ -1363,7 +1638,7 @@ function autoNpwpToggle() {
     }
 };
 
-function advInsIncToggle() {
+advInsIncToggle = function() {
     navigator.vibrate(30);
 
     if ($('#adv-insInclude').val() == "no") {
@@ -1377,7 +1652,7 @@ function advInsIncToggle() {
     }
 }
 
-function advAddbToggle() {
+advAddbToggle = function() {
     navigator.vibrate(30);
 
     if ($('#adv-addb').val() == "no") {
