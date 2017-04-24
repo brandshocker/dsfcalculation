@@ -1,4 +1,5 @@
 /////////////////////////// COMMON VARIABLES
+API = "https://dsfcalculation.000webhostapp.com/api/";
 active = "calculation";
 iteration = 1;
 admNpwp = 2325000;
@@ -87,6 +88,149 @@ hideMinimo = function () {
     }, 1000);
     active = "none";
     StatusBar.show();
+}
+
+registerProcess = function()
+{
+    $("#loader").show();
+    
+    var uname   = $('#reg-username').val().toLowerCase();
+    var email   = $('#reg-email').val();
+    var pass    = $('#reg-password').val();
+    var pass2   = $('#reg-password-2').val();
+    var data    = "username=" + uname + "&email=" + email + "&password=" + pass + "&gps_lat=" + gps_lat + "&gps_long=" + gps_long;
+    
+    if(uname == '')
+        {
+            $("#loader").hide();
+            toast('Silahkan masukan username');
+        } else if(email == '')
+            {
+                $("#loader").hide();
+                toast('Silahkan masukan Email anda');
+            } else if(pass == '')
+                {
+                    $("#loader").hide();
+                    toast('Masukan Password anda');
+                } else if(pass != pass2)
+                    {
+                        $("#loader").hide();
+                        toast('Konfirmasi password salah');
+                    } else {
+                        o('Do Register');
+                        // AJAX Code To Submit Form.
+                        $.ajax({
+                            type: "GET",
+                            url: API + "mod_register.php?",
+                            data: data,
+                            cache: false,
+                            success: function (result) {
+                                $("#loader").hide();
+                                switch(result){
+                                    case "success":
+                                        localStorage.setItem('uname', uname);
+                                        localStorage.setItem('pass', pass);
+                                        pop('Registrasi berhasil')
+                                        $('#login').css('margin-left','300%');
+                                        break;
+                                    case "failed":
+                                        toast('Registrasi gagal');
+                                        break;
+                                    default:
+                                        toast(result);
+                                }
+                            }
+                        });
+                    }
+}
+
+logout = function()
+{
+    localStorage.setItem('uname', 'null');
+    localStorage.setItem('pass', 'null');
+    hideMinimo();
+    login_check();
+}
+
+loginProcess = function()
+{
+    $('#loader').show();
+    var username = $('#login-username').val().toLocaleLowerCase();
+    var password = $('#login-password').val()
+    var data = "username=" + username + "&password="+password;
+
+    $.ajax({
+        type: "GET",
+        url: API + "mod_check.php?",
+        data: data,
+        cache: false,
+        success: function (result) {
+            $("#loader").hide();
+            switch (result) {
+                case "logged":
+                    localStorage.setItem('uname', username);
+                    localStorage.setItem('pass', password);
+                    $('#login').css('margin-left','300%');
+                    return true;
+                    break;
+                case "false":
+                    $('#loader').hide();
+                    toast('Username dan password salah');
+                    $('#login').css('margin-left','0%');
+                    $('#login-container').css('margin-left','-100%');
+                    return false;
+                    break;
+                default:
+                    $('#loader').hide();
+                    toast('Username dan password salah');
+                    $('#login').css('margin-left','0%');
+                    $('#login-container').css('margin-left','-100%');
+                    return false;
+            }
+        }
+   });
+}
+
+login_check = function(username,password)
+{
+    var data = "username=" + username + "&password="+password;
+
+    $.ajax({
+        type: "GET",
+        url: API + "mod_check.php?",
+        data: data,
+        cache: false,
+        success: function (result) {
+            $("#loader").hide();
+            switch (result) {
+                case "logged":
+                    localStorage.setItem('uname', username);
+                    localStorage.setItem('pass', password);
+                    $('#login').css('margin-left','300%');
+                    return true;
+                    break;
+                case "false":
+                    $('#login').css('margin-left','0%');
+                    $('#login-container').css('margin-left','-200%');
+                    return false;
+                    break;
+                default:
+                    $('#login').css('margin-left','0%');
+                    $('#login-container').css('margin-left','-200%');
+                    return false;
+            }
+        }
+   });
+}
+
+formLogin = function()
+{
+    $('#login-container').css('margin-left','-100%');
+}
+
+formRegister = function()
+{
+    $('#login-container').css('margin-left','0');
 }
 
 showPopup = function() {
@@ -244,9 +388,19 @@ $(function () {
         }
     })
     
+    // check login
+    var site_user   = localStorage.getItem('uname');
+    var site_pass   = localStorage.getItem('pass');
+    
+    login_check(site_user,site_pass)
+    
+    gps_lat     = 0;
+    gps_long    = 0;
     // Get Coordinate
     var onSuccess = function(position) {
         o('Lat: '+ position.coords.latitude + '\n' +'Long: ' + position.coords.longitude + '\n' );
+        gps_lat     = position.coords.latitude;
+        gps_long    = position.coords.longitude;
     };
 
     // onError Callback receives a PositionError object
@@ -257,7 +411,9 @@ $(function () {
 
     navigator.geolocation.getCurrentPosition(onSuccess, onError);
     
-    loadNews('#content-help','https://a9325522.000webhostapp.com/api/mod_news.php');
+    loadNews('#content-news', API + 'mod_news.php');
+    loadNews('#content-help', API + 'mod_help.php');
+    loadNews('#content-package', API + 'mod_package.php');
 
 });
 
@@ -1369,7 +1525,7 @@ loadNews = function(target, url)
               }
             }
         if(statusTxt == "error")
-            toast("Error: " + xhr.status + ": " + xhr.statusText);
+            toast("Error: Couldn't connect to internet " + xhr.status + ": " + xhr.statusText);
     });
 }
 
@@ -1506,14 +1662,14 @@ selectType = function () {
 }
 
 var carsAndModels = {};
-carsAndModels['Pajero'] = ['-- Silahkan pilih kategori', 'DAKAR 4X4 GLX [M/T]', 'DAKAR 4X2 [A/T]', 'DAKAR 4X2 [A/T] LIMITED', 'EXCEED 4X2 [M/T]', 'DAKAR 4X4 [A/T]', 'DAKAR 4X4 [M/T] LIMITED'];
+carsAndModels['Pajero'] = ['-- Silahkan pilih kategori', 'DAKAR 4X4 AT LIMITED', 'DAKAR 4X4 AT', 'DAKAR 4X2 AT LIMITED', 'DAKAR 4X2 AT', 'EXCEED 4X2 AT', 'EXCEED 4X2 MT', 'GLX 4X4 MT'];
 carsAndModels['Mirage'] = ['-- Silahkan pilih kategori', 'Mirage Exceed', 'Mirage GLS', 'Mirage GLX'];
-carsAndModels['Outlander'] = ['-- Silahkan pilih kategori', 'Outlander Exceed', 'Outlander GLS', 'Outlander GLX'];
-carsAndModels['Fuso'] = ['-- Silahkan pilih kategori', 'FM 517 HS', 'FM 517 HL', 'FM 517 HL LONG', 'FN 517 ML2', 'FN 517 ML2 SUPER LONG', 'FN 527 MS', 'FN 527 ML', 'FJ 2523', 'FJ 2528', 'FI 1217', 'FZ 4928 TH'];
+carsAndModels['Outlander'] = ['-- Silahkan pilih kategori', 'Outlander PX', 'Outlander GLS', 'Outlander GLX'];
+carsAndModels['Fuso'] = ['-- Silahkan pilih kategori', 'FM 517 HS', 'FM 517 HL', 'FM 517 HL LONG', 'FN 517 ML2', 'FN 517 ML2 SUPER LONG', 'FN 527 MS', 'FN 527 ML', 'FJ 2523', 'FJ 2528', 'FI 1217', 'FZ 4928 TH', 'FZ 4028 TH'];
 carsAndModels['FE Normal'] = ['-- Silahkan pilih kategori', 'FE 71', 'FE 71 (ESPASIO)', 'FE 71 BC', 'FE 71 L - FE 71 LCB - FL 71 PS', 'FE 73', 'FE 73 HD', 'FE 74 HDV', 'FE 74 S', 'FE 83 BC', 'FE 83 G HDL', 'FE 84 G BC', 'FE 83 G HDL', 'FE 84 G BC'];
 carsAndModels['FE Spesial'] = ['-- Silahkan pilih kategori', 'SP FE 71', 'SP FE 71 (ESPASIO)', 'SP FE 71 BC', 'SP FE 71 L - FE 71 LCB - FL 71 PS', 'SP FE 73', 'SP FE 73 HD', 'SP FE 74 HDV', 'SP FE 74 S', 'SP FE 83 BC', 'SP FE 83 G HDL', 'SP FE 84 G BC', 'SP FE 83 G HDL', 'SP FE 84 G BC'];
-carsAndModels['L300'] = ['-- Silahkan pilih kategori', 'L300 FB/FD', 'L300 Standard', 'L300 Minibus'];
-carsAndModels['ColtT'] = ['-- Silahkan pilih kategori', 'Colt T120 SS FB/FD', 'Colt T120 SS Standard', 'Colt T120 SS 3 Ways'];
+carsAndModels['L300'] = ['-- Silahkan pilih kategori', 'L300 FB-FD', 'L300 Standard', 'L300 Minibus'];
+carsAndModels['ColtT'] = ['-- Silahkan pilih kategori', 'Colt T120 SS FB-FD', 'Colt T120 SS Standard', 'Colt T120 SS 3 Ways'];
 
 ChangeCatList = function() {
     var carList = document.getElementById("auto-category");
