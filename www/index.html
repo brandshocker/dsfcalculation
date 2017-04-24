@@ -90,12 +90,49 @@
         </div>
     </div>
     <!-- TOASTER -->
-
+    <div id="login">
+        <div id="login-container">
+            <div id="login-register" class="login-box">
+                <div class="login-register-block">
+                    <h1>REGISTER</h1>
+                    <form action="return false" onsubmit="return false">
+                        <input id="reg-username" placeholder="Username" name="reg-username" type="text" />
+                        <input id="reg-email" placeholder="Email" name="reg-username" type="email" />
+                        <input id="reg-password" placeholder="Password" name="reg-password" type="password" />
+                        <input id="reg-password-2" placeholder="Konfirmasi Password" name="reg-password-2" type="password" />
+                        <button type="submit" value="Registrasi" onclick="registerProcess()">Registrasi</button>
+                    </form>
+                    <br />
+                    <span>Sudah punya ID, <a href="#" onclick="formLogin();">Login</a> disini</span>
+                </div>
+            </div>
+            <div id="login-form" class="login-box">
+                <div class="login-register-block">
+                    <h1>LOGIN</h1>
+                    <form action="return false" onsubmit="return false">
+                        <input id="login-username" placeholder="Username" name="reg-username" type="text" />
+                        <input id="login-password" placeholder="Password" name="reg-password" type="password" />
+                        <button type="submit" value="Login" onclick="loginProcess()">Login</button>
+                    </form>
+                    <br />
+                    <span>Belum punya ID, <a href="#" onclick="formRegister();">Register</a> disini</span>
+                </div>
+            </div>
+            <div id="login-confirmation" class="login-splash">
+                <div class="login-register-block">
+                    <br /><br />
+                    <span><a href="#" onclick="formRegister();">Register</a> / <a href="#" onclick="formLogin();">Login</a></span>
+                </div>
+            </div>
+        </div><!--LOGIN CONTAINER-->
+    </div><!--LOGIN-->
     <!-- MINIMO -->
 
     <div id="minimo">
         
         <br /><br /><br /><br /><br /><br /><br /><br /><img src="ui/minimo.png" width="200px" height="70px" /><br />DSF Calculation &copy minimo labs<br />all right reserved<br /><br /> This application is not an official application from Dipostar,<br />this application is purely designed to facilitate the calculation <br />of loan application at Dipo Star Finance Semarang, the<br />calculation is not binding and subject to change<br />- without notice<br /><br />Further info please contact<br />Novan Angga at <a href="#" onclick="window.open('tel:+628112754802', '_system');">+628112754802</a> for further <a href="#" onclick="window.open('whatsapp://send?text=Ping!&phone=+628112754802', '_system');">assistance</a>
+        <br /><br />
+        <a href="#" onclick="logout()">Keluar dari aplikasi</a>
     </div>
 
     <div id="popup">
@@ -173,7 +210,7 @@
                     <select id="auto-category" name="auto_category" onchange="ChangeCatList()"> 
                         <option value="#">-- Pilih Kategori</option>
                         <option value="Pajero">Mitsubishi All New Pajero</option>
-                        <option value="Mirage" disabled>Mitsubishi New Mirage</option>
+                        <option value="Mirage">Mitsubishi New Mirage</option>
                         <option value="Outlander">Mitsubishi New Outlander</option>
                         <option value="Fuso">Mitsubishi FUSO Series</option>
                         <option value="FE Normal">Mitsubishi FE (Normal)</option>
@@ -187,7 +224,7 @@
                         <option value="#">-- Silahkan pilih kategori</option>
                     </select> 
                     <div class="caption">Masukan harga OTR</div>
-                    <input id="auto-otr" name="auto-otr" type="number" placeholder="Harga OTR" value="306000000" onfocus="numberFocus(this);" onblur="numberBlur(this);" autocomplete="off" />
+                    <input id="auto-otr" name="auto-otr" type="number" placeholder="Harga OTR" onfocus="numberFocus(this);" onblur="numberBlur(this);" autocomplete="off" />
                     <div class="caption">Pilih Tenor kredit</div>
                     <select id="auto-tenor" name="auto-tenor">
                         <option value="">-- Pilih Tenor</option>
@@ -219,7 +256,7 @@
                     <input id="auto-insInclude" name="auto-InsInclude" value="no" class="inputHidden" />
                     
                     <div class="caption">Angsuran dibayar dibelakang (ADDB)</div>
-                    <div id="auto-addbToggle" onclick="autoAddbToggle();" class="miniToggler">&nbsp;</div>
+                    <div id="auto-addbToggle" class="miniToggler">&nbsp;</div>
                     <input id="auto-addb" name="auto-addb" value="no" class="inputHidden" />
                     
                     <div class="caption">Ada NPWP</div>
@@ -334,11 +371,7 @@
             <div class="spacer"></div>
             
             <!------------------------------------------------------------------------------------------------------------------------------------>
-                <br />
-                <br />
-                <a href="#" oncontextmenu="pop('Copied');" onclick="pop('Saved !');">GOOGLE IT</a><br /><br />
-                <a href="#" onclick="window.open('whatsapp://send?text=LoremIpsum', '_system');">Assistance</a><br /><br />
-                <a href="#" onclick="window.open('tel:08112754802', '_system');">Call Me</a><br /><br />
+                <div id=content-package>Paket terbaru DSF</div>
             <!------------------------------------------------------------------------------------------------------------------------------------>
             <div class="footer">&nbsp;</div>
             <!-- footer -->
@@ -347,7 +380,7 @@
             <div class="spacer"></div>
             
             <!------------------------------------------------------------------------------------------------------------------------------------>
-                lorem<br />ipsum<br />dolor<br />sit
+                <div id=content-news>Belum ada berita</div>
             <!------------------------------------------------------------------------------------------------------------------------------------>
             <div class="footer"></div>
             <!-- footer -->
@@ -355,7 +388,7 @@
         <div id="contentHelp" class="block">
             <div class="spacer"></div>
             <!------------------------------------------------------------------------------------------------------------------------------------>
-            <div id=content-help>News Here</div>
+            <div id=content-help>Aturan umum pembiayaan di DSF</div>
             <!------------------------------------------------------------------------------------------------------------------------------------>
             <div class="footer"></div>
             <!-- footer -->
