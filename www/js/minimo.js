@@ -1,6 +1,7 @@
 /////////////////////////// COMMON VARIABLES
 API = "https://dsfcalculation.000webhostapp.com/api/";
 active = "calculation";
+signature = localStorage.getItem('signature');
 iteration = 1;
 admNpwp = 2325000;
 admNonNpwp = 2625000;
@@ -90,74 +91,69 @@ hideMinimo = function () {
     StatusBar.show();
 }
 
-registerProcess = function()
-{
+registerProcess = function () {
     $("#loader").show();
-    
-    var uname   = $('#reg-username').val().toLowerCase();
-    var email   = $('#reg-email').val();
-    var pass    = $('#reg-password').val();
-    var pass2   = $('#reg-password-2').val();
-    var data    = "username=" + uname + "&email=" + email + "&password=" + pass + "&gps_lat=" + gps_lat + "&gps_long=" + gps_long;
-    
-    if(uname == '')
-        {
-            $("#loader").hide();
-            toast('Silahkan masukan username');
-        } else if(email == '')
-            {
+
+    var uname = $('#reg-username').val().toLowerCase();
+    var email = $('#reg-email').val();
+    var pass = $('#reg-password').val();
+    var pass2 = $('#reg-password-2').val();
+    var data = "username=" + uname + "&email=" + email + "&password=" + pass + "&gps_lat=" + gps_lat + "&gps_long=" + gps_long;
+
+    if (uname == '') {
+        $("#loader").hide();
+        toast('Silahkan masukan username');
+    } else if (email == '') {
+        $("#loader").hide();
+        toast('Silahkan masukan Email anda');
+    } else if (pass == '') {
+        $("#loader").hide();
+        toast('Masukan Password anda');
+    } else if (pass != pass2) {
+        $("#loader").hide();
+        toast('Konfirmasi password salah');
+    } else {
+        o('Do Register');
+        // AJAX Code To Submit Form.
+        $.ajax({
+            type: "GET",
+            url: API + "mod_register.php?",
+            data: data,
+            cache: false,
+            success: function (result) {
                 $("#loader").hide();
-                toast('Silahkan masukan Email anda');
-            } else if(pass == '')
-                {
-                    $("#loader").hide();
-                    toast('Masukan Password anda');
-                } else if(pass != pass2)
-                    {
-                        $("#loader").hide();
-                        toast('Konfirmasi password salah');
-                    } else {
-                        o('Do Register');
-                        // AJAX Code To Submit Form.
-                        $.ajax({
-                            type: "GET",
-                            url: API + "mod_register.php?",
-                            data: data,
-                            cache: false,
-                            success: function (result) {
-                                $("#loader").hide();
-                                switch(result){
-                                    case "success":
-                                        localStorage.setItem('uname', uname);
-                                        localStorage.setItem('pass', pass);
-                                        pop('Registrasi berhasil')
-                                        $('#login').css('margin-left','300%');
-                                        break;
-                                    case "failed":
-                                        toast('Registrasi gagal');
-                                        break;
-                                    default:
-                                        toast(result);
-                                }
-                            }
-                        });
-                    }
+                switch (result) {
+                    case "success":
+                        localStorage.setItem('uname', uname);
+                        localStorage.setItem('pass', pass);
+                        pop('Registrasi berhasil')
+                        $('#login').css('margin-left', '300%');
+                        break;
+                    case "failed":
+                        toast('Registrasi gagal');
+                        break;
+                    default:
+                        toast(result);
+                }
+            }
+        });
+    }
 }
 
-logout = function()
-{
+logout = function () {
+    $('#login').css('margin-left', '0%');
     localStorage.setItem('uname', 'null');
     localStorage.setItem('pass', 'null');
     hideMinimo();
     login_check();
+    
 }
 
-loginProcess = function()
-{
+loginProcess = function () {
     $('#loader').show();
     var username = $('#login-username').val().toLocaleLowerCase();
     var password = $('#login-password').val()
-    var data = "username=" + username + "&password="+password;
+    var data = "username=" + username + "&password=" + password;
 
     $.ajax({
         type: "GET",
@@ -170,30 +166,55 @@ loginProcess = function()
                 case "logged":
                     localStorage.setItem('uname', username);
                     localStorage.setItem('pass', password);
-                    $('#login').css('margin-left','300%');
+                    $('#login').css('margin-left', '100%');
+                    $.ajax({
+                        type: "GET",
+                        url: API + "mod_userprofile.php?",
+                        data: "username=" + username,
+                        cache: false,
+                        success: function (result) {
+                            pop('Profile loaded');
+                            localStorage.setItem('signature', result);
+                        }
+                    });
+                    
+                    if (gps_lat != "") {
+                        var data1 = "username=" + username + "&gps_lat=" + gps_lat + "&gps_long=" + gps_long;
+
+
+                        $.ajax({
+                            type: "GET",
+                            url: API + "mod_update_loc.php?",
+                            data: data1,
+                            cache: false,
+                            success: function (result) {
+
+                            }
+                        });
+                    }
+
                     return true;
                     break;
                 case "false":
                     $('#loader').hide();
                     toast('Username dan password salah');
-                    $('#login').css('margin-left','0%');
-                    $('#login-container').css('margin-left','-100%');
+                    $('#login').css('margin-left', '0%');
+                    $('#login-container').css('margin-left', '-100%');
                     return false;
                     break;
                 default:
                     $('#loader').hide();
                     toast('Username dan password salah');
-                    $('#login').css('margin-left','0%');
-                    $('#login-container').css('margin-left','-100%');
+                    $('#login').css('margin-left', '0%');
+                    $('#login-container').css('margin-left', '-100%');
                     return false;
             }
         }
-   });
+    });
 }
 
-login_check = function(username,password)
-{
-    var data = "username=" + username + "&password="+password;
+login_check = function (username, password, gps_lat, gps_long) {
+    var data = "username=" + username + "&password=" + password;
 
     $.ajax({
         type: "GET",
@@ -206,46 +227,59 @@ login_check = function(username,password)
                 case "logged":
                     localStorage.setItem('uname', username);
                     localStorage.setItem('pass', password);
-                    $('#login').css('margin-left','300%');
+                    $('#login').css('margin-left', '100%');
+                    if (gps_lat != "") {
+                        var data1 = "username=" + username + "&gps_lat=" + gps_lat + "&gps_long=" + gps_long;
+
+
+                        $.ajax({
+                            type: "GET",
+                            url: API + "mod_update_loc.php?",
+                            data: data1,
+                            cache: false,
+                            success: function (result) {
+
+                            }
+                        });
+                    }
+
                     return true;
                     break;
                 case "false":
-                    $('#login').css('margin-left','0%');
-                    $('#login-container').css('margin-left','-200%');
+                    $('#login').css('margin-left', '0%');
+                    $('#login-container').css('margin-left', '-200%');
                     return false;
                     break;
                 default:
-                    $('#login').css('margin-left','0%');
-                    $('#login-container').css('margin-left','-200%');
+                    $('#login').css('margin-left', '0%');
+                    $('#login-container').css('margin-left', '-200%');
                     return false;
             }
         }
-   });
+    });
 }
 
-formLogin = function()
-{
-    $('#login-container').css('margin-left','-100%');
+formLogin = function () {
+    $('#login-container').css('margin-left', '-100%');
 }
 
-formRegister = function()
-{
-    $('#login-container').css('margin-left','0');
+formRegister = function () {
+    $('#login-container').css('margin-left', '0');
 }
 
-showPopup = function() {
+showPopup = function () {
     $('#popup').css('margin-left', '0%');
     active = "popup";
     StatusBar.hide();
 }
 
-hidePopup = function() {
+hidePopup = function () {
     $('#popup').css('margin-left', '100%');
     active = "none";
     StatusBar.show();
 }
 
-setPopup = function(ele, val) {
+setPopup = function (ele, val) {
     if (val == null) {
         val = "&nbsp;";
     }
@@ -337,6 +371,8 @@ selectContent = function (i) {
         activePage = "package";
         $('#container').css('margin-left', '-100%');
         $('#mark').css('top', '45px');
+
+        getUser();
     }
 
     if (i == "news") {
@@ -344,6 +380,7 @@ selectContent = function (i) {
         activePage = "news";
         $('#container').css('margin-left', '-200%');
         $('#mark').css('top', '90px');
+        loadNews('#content-news', API + 'mod_news.php');
     }
 
     if (i == "help") {
@@ -351,6 +388,7 @@ selectContent = function (i) {
         activePage = "help";
         $('#container').css('margin-left', '-300%');
         $('#mark').css('top', '135px');
+        loadNews('#content-help', API + 'mod_help.php');
     }
 
     o('Page : ' + activePage);
@@ -387,20 +425,22 @@ $(function () {
             objEvent.preventDefault(); // stops its action
         }
     })
-    
+
     // check login
-    var site_user   = localStorage.getItem('uname');
-    var site_pass   = localStorage.getItem('pass');
-    
-    login_check(site_user,site_pass)
-    
-    gps_lat     = 0;
-    gps_long    = 0;
+    var site_user = localStorage.getItem('uname');
+    var site_pass = localStorage.getItem('pass');
+
+
+
+    gps_lat = 0;
+    gps_long = 0;
     // Get Coordinate
-    var onSuccess = function(position) {
-        o('Lat: '+ position.coords.latitude + '\n' +'Long: ' + position.coords.longitude + '\n' );
-        gps_lat     = position.coords.latitude;
-        gps_long    = position.coords.longitude;
+    var onSuccess = function (position) {
+        o('Lat: ' + position.coords.latitude + '\n' + 'Long: ' + position.coords.longitude + '\n');
+        gps_lat = position.coords.latitude;
+        gps_long = position.coords.longitude;
+
+        login_check(site_user, site_pass, position.coords.latitude, position.coords.longitude);
     };
 
     // onError Callback receives a PositionError object
@@ -410,10 +450,8 @@ $(function () {
     }
 
     navigator.geolocation.getCurrentPosition(onSuccess, onError);
-    
-    loadNews('#content-news', API + 'mod_news.php');
-    loadNews('#content-help', API + 'mod_help.php');
-    loadNews('#content-package', API + 'mod_package.php');
+
+
 
 });
 
@@ -441,7 +479,11 @@ onBackKeyDown = function () {
             break;
         default:
             pop('long press to exit')
-            navigator.app.backHistory();
+            navigator.Backbutton.goHome(function () {
+                console.log('success')
+            }, function () {
+                console.log('fail')
+            });
     }
 }
 
@@ -450,7 +492,7 @@ rc = function (i) {
     o(i + " : " + obj);
 };
 
-numberize = function(input) {
+numberize = function (input) {
     var nStr = input.value + '';
     nStr = nStr.replace(/\,/g, "");
     var x = nStr.split('.');
@@ -568,6 +610,10 @@ autoFormSubmit = function () {
         toast('Silahkan pilih tipe kendaraan')
     } else if (autoOtr == "") {
         toast('Silahkan masukan harga OTR kendaraan');
+    } else if (autoTenor == "") {
+        toast('Pilih tenor kredit')
+    } else if (autoInsurance == '') {
+        toast('Pilih tipe asuransi')
     } else {
         $.getJSON("json/" + autoType + ".json", function (package) {
 
@@ -1138,10 +1184,11 @@ autoCalculate = function (package, otr, tenor, dp, adm, ins1, ins2, tjh, tjhTota
     }
 
     //o('Calculate \n{ \n   otr : ' + otr + "\n   tenor : " + TENOR + "\n   dp : " + DP + "\n   adm : " + ADM + "\n   rate : " + rate + "\n   asuransi : " + INSURANCE + "\n   usl : " + USL + "\n   tpd : " + TDP + "\n   provisi : " + PROVISION + "/ " + provision + "\n   insurance incl : " + insInc + "\n   addb : " + addb + "\n}");
+    signature = localStorage.getItem('signature');
+    
+    var strWa = ('OTR : Rp. ' + format(Math.ceil(otr)) + "\nTenor : x " + tenor + "\nDP : Rp. " + format(Math.ceil(DP)) + " / " + DP_PERCENT + "\nAdm : Rp. " + format(Math.ceil(ADM)) + "\nRate : " + ((rate * 100).toFixed(2) + "%") + "\nAsuransi : Rp. " + format(Math.ceil(INSURANCE)) + " " + INSTEXT + "\nProvisi : Rp. " + format(Math.ceil(PROVISION)) + " / " + ((provision * 100).toFixed(2) + "%\nAngsuran : Rp. " + format(reround(USL)) + " x " + TENOR + "\nTDP : Rp. " + format(reround(TDP))) + "\n" + signature)
 
-    var strWa = ('OTR : Rp. ' + format(Math.ceil(otr)) + "\nTenor : x " + TENOR + "\nDP : Rp. " + format(Math.ceil(DP)) + " / " + DP_PERCENT + "\nAdm : Rp. " + format(Math.ceil(ADM)) + "\nRate : " + ((rate * 100).toFixed(2) + "%") + "\nAsuransi : Rp. " + format(Math.ceil(INSURANCE)) + " " + INSTEXT + "\nProvisi : Rp. " + format(Math.ceil(PROVISION)) + " / " + ((provision * 100).toFixed(2) + "%\nAngsuran : Rp. " + format(reround(USL)) + "\nTDP : Rp. " + format(reround(TDP))) + "\n(DSF Angga - 08112754802, brandshocker@gmail.com)")
-
-    var strSms = ('OTR : ' + format(Math.ceil(otr)) + ", Tenor : x " + TENOR + ", DP : " + format(Math.ceil(DP)) + " / " + ((dp * 100).toFixed(2) + "%2525") + ", Adm : " + format(Math.ceil(ADM)) + ", Rate : " + ((rate * 100).toFixed(2) + "%2525") + ", Asuransi : " + format(Math.ceil(INSURANCE)) + " " + INSTEXT + ", Provisi : " + format(Math.ceil(PROVISION)) + " / " + ((provision * 100).toFixed(2) + "%2525, Angsuran : " + format(reround(USL)) + ", TDP : " + format(reround(TDP))) + ", (DSF Angga - 08112754802, brandshocker@gmail.com)")
+    var strSms = ('OTR : ' + format(Math.ceil(otr)) + ", Tenor : x " + tenor + ", DP : " + format(Math.ceil(DP)) + " / " + ((dp * 100).toFixed(2) + "%2525") + ", Adm : " + format(Math.ceil(ADM)) + ", Rate : " + ((rate * 100).toFixed(2) + "%2525") + ", Asuransi : " + format(Math.ceil(INSURANCE)) + " " + INSTEXT + ", Provisi : " + format(Math.ceil(PROVISION)) + " / " + ((provision * 100).toFixed(2) + "%2525, Angsuran : " + format(reround(USL)) + " x " + TENOR + ", TDP : " + format(reround(TDP))) + ", " + signature)
 
     var shareTextWa = encodeURIComponent(strWa);
 
@@ -1172,7 +1219,7 @@ autoCalculate = function (package, otr, tenor, dp, adm, ins1, ins2, tjh, tjhTota
     navigator.vibrate(50);
 }
 
-autoTdpCalculate = function(findTdp, otr, tenor, dp, adm, package, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb) {
+autoTdpCalculate = function (findTdp, otr, tenor, dp, adm, package, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb) {
     var ADM = adm;
     var DP = otr * dp;
     var DP_PERCENT = ((dp * 100).toFixed(2)) + " %";
@@ -1191,8 +1238,8 @@ autoTdpCalculate = function(findTdp, otr, tenor, dp, adm, package, ins1, ins2, t
         INSTEXT = 'Dimuka';
         TJH = tjhTotal;
     }
-    
-    rate = ratePicker(package,tenor,dp);
+
+    rate = ratePicker(package, tenor, dp);
 
     // CALCULATE USL
     var USL = (NI_TOTAL + ((NI_TOTAL * rate) * (tenor / 12))) / tenor;
@@ -1225,7 +1272,7 @@ autoTdpCalculate = function(findTdp, otr, tenor, dp, adm, package, ins1, ins2, t
     }
 };
 
-advTdpCalculate = function(findTdp, otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb) {
+advTdpCalculate = function (findTdp, otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb) {
     var ADM = adm;
     var DP = otr * dp;
     var DP_PERCENT = ((dp * 100).toFixed(2)) + " %";
@@ -1276,7 +1323,7 @@ advTdpCalculate = function(findTdp, otr, tenor, dp, adm, rate, ins1, ins2, tjh, 
     }
 };
 
-autoUslCalculate = function(findUsl, otr, tenor, dp, adm, package, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb) {
+autoUslCalculate = function (findUsl, otr, tenor, dp, adm, package, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb) {
     var ADM = adm;
     var DP = otr * dp;
     var DP_PERCENT = ((dp * 100).toFixed(2)) + " %";
@@ -1294,7 +1341,7 @@ autoUslCalculate = function(findUsl, otr, tenor, dp, adm, package, ins1, ins2, t
         TJH = tjhTotal;
     }
 
-    rate = ratePicker(package,tenor,dp);
+    rate = ratePicker(package, tenor, dp);
 
     // CALCULATE USL
     var USL = (NI_TOTAL + ((NI_TOTAL * rate) * (tenor / 12))) / tenor;
@@ -1306,7 +1353,7 @@ autoUslCalculate = function(findUsl, otr, tenor, dp, adm, package, ins1, ins2, t
         var TDP = DP + ADM + INSURANCE + PROVISION + TJH;
         var TENOR = '' + tenor + ' [ADDB]';
     }
-    
+
     if (iteration == 999) {
         var spread = USL - findUsl;
         if (spread < 1000) {
@@ -1336,7 +1383,7 @@ autoUslCalculate = function(findUsl, otr, tenor, dp, adm, package, ins1, ins2, t
     }
 };
 
-advUslCalculate = function(findUsl, otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb) {
+advUslCalculate = function (findUsl, otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb) {
     var ADM = adm;
     var DP = otr * dp;
     var NI_PURE = otr - DP;
@@ -1426,10 +1473,12 @@ calculate = function (otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal, insP
     }
 
     //o('Calculate \n{ \n   otr : ' + otr + "\n   tenor : " + TENOR + "\n   dp : " + DP + "\n   adm : " + ADM + "\n   rate : " + rate + "\n   asuransi : " + INSURANCE + "\n   usl : " + USL + "\n   tpd : " + TDP + "\n   provisi : " + PROVISION + "/ " + provision + "\n   insurance incl : " + insInc + "\n   addb : " + addb + "\n}");
+    
+    signature = localStorage.getItem('signature');
+    
+    var strWa = ('OTR : Rp. ' + format(Math.ceil(otr)) + "\nTenor : x " + tenor + "\nDP : Rp. " + format(Math.ceil(DP)) + " / " + DP_PERCENT + "\nAdm : Rp. " + format(Math.ceil(ADM)) + "\nRate : " + ((rate * 100).toFixed(2) + "%") + "\nAsuransi : Rp. " + format(Math.ceil(INSURANCE)) + " " + INSTEXT + "\nProvisi : Rp. " + format(Math.ceil(PROVISION)) + " / " + ((provision * 100).toFixed(2) + "%\nAngsuran : Rp. " + format(reround(USL)) + " x " + TENOR + "\nTDP : Rp. " + format(reround(TDP))) + "\n" + signature)
 
-    var strWa = ('OTR : Rp. ' + format(Math.ceil(otr)) + "\nTenor : x " + TENOR + "\nDP : Rp. " + format(Math.ceil(DP)) + " / " + DP_PERCENT + "\nAdm : Rp. " + format(Math.ceil(ADM)) + "\nRate : " + ((rate * 100).toFixed(2) + "%") + "\nAsuransi : Rp. " + format(Math.ceil(INSURANCE)) + " " + INSTEXT + "\nProvisi : Rp. " + format(Math.ceil(PROVISION)) + " / " + ((provision * 100).toFixed(2) + "%\nAngsuran : Rp. " + format(reround(USL)) + "\nTDP : Rp. " + format(reround(TDP))) + "\n(DSF Angga - 08112754802, brandshocker@gmail.com)")
-
-    var strSms = ('OTR : ' + format(Math.ceil(otr)) + ", Tenor : x " + TENOR + ", DP : " + format(Math.ceil(DP)) + " / " + ((dp * 100).toFixed(2) + "%2525") + ", Adm : " + format(Math.ceil(ADM)) + ", Rate : " + ((rate * 100).toFixed(2) + "%2525") + ", Asuransi : " + format(Math.ceil(INSURANCE)) + " " + INSTEXT + ", Provisi : " + format(Math.ceil(PROVISION)) + " / " + ((provision * 100).toFixed(2) + "%2525, Angsuran : " + format(reround(USL)) + ", TDP : " + format(reround(TDP))) + ", (DSF Angga - 08112754802, brandshocker@gmail.com)")
+    var strSms = ('OTR : ' + format(Math.ceil(otr)) + ", Tenor : x " + TENOR + ", DP : " + format(Math.ceil(DP)) + " / " + ((dp * 100).toFixed(2) + "%2525") + ", Adm : " + format(Math.ceil(ADM)) + ", Rate : " + ((rate * 100).toFixed(2) + "%2525") + ", Asuransi : " + format(Math.ceil(INSURANCE)) + " " + INSTEXT + ", Provisi : " + format(Math.ceil(PROVISION)) + " / " + ((provision * 100).toFixed(2) + "%2525, Angsuran : " + format(reround(USL)) + " x " + TENOR + ", TDP : " + format(reround(TDP))) + ", " + signature)
 
     var shareTextWa = encodeURIComponent(strWa);
 
@@ -1503,33 +1552,72 @@ calculateValue = function (otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal,
     }
 }
 
-loadNews = function(target, url)
+updateUser = function()
 {
-    $(target).load(url, function(responseTxt, statusTxt, xhr){
-        if(statusTxt == "success")
-            pop("Content loaded successfully!");
-        
-            var acc = document.getElementsByClassName("accordion");
-            var i;
+    var dataPost = {
+        "username": $('#user_username').val(),
+        "email": $('#user_email').val(),
+        "dealer": $('#user_dealer').val(),
+        "signature": $('#user_signature').val() 
+    };
+    
+    var dataString = JSON.stringify(dataPost);
 
-            for (i = 0; i < acc.length; i++) {
-              acc[i].onclick = function() {
-                this.classList.toggle("active");
-                var panel = this.nextElementSibling;
-                if (panel.style.maxHeight){
-                  panel.style.maxHeight = null;
-                    
-                } else {
-                  panel.style.maxHeight = panel.scrollHeight + "px";
-                } 
-              }
-            }
-        if(statusTxt == "error")
-            toast("Error: Couldn't connect to internet " + xhr.status + ": " + xhr.statusText);
+    $.ajax({
+        url: 'https://dsfcalculation.000webhostapp.com/api/mod_update.php',
+        data: {
+            myData: dataString
+        },
+        type: 'POST',
+        success: function (response) {
+            pop('Data disimpan');
+            localStorage.setItem('signature', $('#user_signature').val());
+        }
     });
 }
 
-ratePicker = function(package,tenor,dp){
+getUser = function()
+{
+    $('#loader').show();
+    var username = localStorage.getItem('uname');
+    $.getJSON("https://dsfcalculation.000webhostapp.com/api/mod_user.php?username=" + username, function (user) {
+        $('#user_username').val(user['username']);
+        $('#user_email').val(user['email']);
+        $('#user_dealer').val(user['dealer']);
+        $('#user_signature').val(user['signature']);
+        $('#loader').hide();
+    });
+}
+
+loadNews = function (target, url) {
+    $('#loader').show();
+    $(target).load(url, function (responseTxt, statusTxt, xhr) {
+        if (statusTxt == "success")
+            $('#loader').hide();
+        // pop("Content loaded successfully!");
+
+        var acc = document.getElementsByClassName("accordion");
+        var i;
+
+        for (i = 0; i < acc.length; i++) {
+            acc[i].onclick = function () {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.maxHeight) {
+                    panel.style.maxHeight = null;
+
+                } else {
+                    panel.style.maxHeight = panel.scrollHeight + "px";
+                }
+            }
+        }
+        if (statusTxt == "error")
+            $('#loader').hide();
+        // toast("Error: Couldn't connect to internet " + xhr.status + ": " + xhr.statusText);
+    });
+}
+
+ratePicker = function (package, tenor, dp) {
     switch (tenor) {
         case "12":
             if (dp >= 0.1 && dp < 0.15) {
@@ -1671,7 +1759,7 @@ carsAndModels['FE Spesial'] = ['-- Silahkan pilih kategori', 'SP FE 71', 'SP FE 
 carsAndModels['L300'] = ['-- Silahkan pilih kategori', 'L300 FB-FD', 'L300 Standard', 'L300 Minibus'];
 carsAndModels['ColtT'] = ['-- Silahkan pilih kategori', 'Colt T120 SS FB-FD', 'Colt T120 SS Standard', 'Colt T120 SS 3 Ways'];
 
-ChangeCatList = function() {
+ChangeCatList = function () {
     var carList = document.getElementById("auto-category");
     var modelList = document.getElementById("auto-type");
     var selCar = carList.options[carList.selectedIndex].value;
@@ -1794,7 +1882,7 @@ insurancePick = function (price, arr) {
     }
 }
 
-autoInsIncToggle = function() {
+autoInsIncToggle = function () {
     navigator.vibrate(30);
 
     if ($('#auto-insInclude').val() == "no") {
@@ -1808,7 +1896,7 @@ autoInsIncToggle = function() {
     }
 }
 
-autoAddbToggle = function() {
+autoAddbToggle = function () {
     navigator.vibrate(30);
 
     if ($('#auto-addb').val() == "no") {
@@ -1822,7 +1910,7 @@ autoAddbToggle = function() {
     }
 };
 
-autoNpwpToggle = function() {
+autoNpwpToggle = function () {
     navigator.vibrate(30);
 
     if ($('#auto-npwp').val() == "no") {
@@ -1836,7 +1924,7 @@ autoNpwpToggle = function() {
     }
 };
 
-advInsIncToggle = function() {
+advInsIncToggle = function () {
     navigator.vibrate(30);
 
     if ($('#adv-insInclude').val() == "no") {
@@ -1850,7 +1938,7 @@ advInsIncToggle = function() {
     }
 }
 
-advAddbToggle = function() {
+advAddbToggle = function () {
     navigator.vibrate(30);
 
     if ($('#adv-addb').val() == "no") {
