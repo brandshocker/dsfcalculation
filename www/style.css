@@ -7,10 +7,23 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
 }
 
+@font-face {
+  font-family: 'PT Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('PT Sans'), local('PTSans-Regular'), url(font/PT-Sans.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+20B4, U+2DE0-2DFF, U+A640-A69F;
+}
+
 a 
 {
     color: #fff;
     text-decoration: underline;
+}
+
+img
+{
+    border-radius: 5px;
 }
 
 body
@@ -140,6 +153,78 @@ input, select, button, option
     transition:0.5s;
 }
 
+#content-package
+{
+    font-family: "PT Sans" !important;
+    font-size: 12px;
+}
+
+#content-package h3
+{
+    font-family: "Fira Sans Condensed" !important;
+    margin-bottom: -10px;
+    font-size: 14px;
+    color: #999;
+}
+
+#content-package .cap
+{
+    margin: 0px;
+    margin-right:5px;
+    text-align: right;
+    padding-top: 30px;
+    color: #999;
+    width:65px;
+    height:10px;
+    float: left;
+    font-family: "Fira Sans Condensed",arial,helvetica !important;
+    font-size: 11px;
+}
+
+#content-package input,
+#content-package select,
+#content-package option,
+#content-package input:disabled
+{
+    text-align: center!important;
+    color: #888;
+    width: calc(100% - 84px);
+    height:25px;
+    float: left;
+    margin: 0px;
+    border: 0px;
+    padding:5px;
+    padding-top: 20px;
+    border-bottom: 1px solid #DDD;  
+    background: #FFF;
+    font-family: "Fira Sans Condensed",arial,helvetica !important;
+    font-size: 18px;
+}
+
+#content-package .button
+{
+    width:calc(40%);
+    height: 40px;
+    margin-top: 10px;
+    margin-left: 10px;
+    background:#b72025;
+    border: none;
+    font-family:"Fira Sans Condensed", arial, helvetica;
+    font-size:18px;
+    color: #FFF;
+    float: right;
+}
+
+#content-package option
+{
+    text-align: left;
+}
+
+#content-package select
+{
+    height: 50px;
+}
+
 #header
 {
     background:#b72025;
@@ -179,7 +264,7 @@ input, select, button, option
 
 #login-container
 {
-    position: fixed;
+    position: absolute;
     width: 300%;
     height: 100%;
     display: block;
@@ -190,6 +275,7 @@ input, select, button, option
     text-align: center;
     font-family: "Fira Sans Condensed", arial, helvetica !important;
     transition:0.3s;
+    overflow: hidden;
     margin-left: -200%;
 }
 
@@ -799,12 +885,12 @@ input, select, button, option
     background-color: #eee;
     color: #444;
     padding: 18px;
-	font-family:"Fira Sans Condensed", arial, helvetica;
+	font-family:"PT Sans", arial, helvetica;
     width: 100%;
     border: none;
     text-align: left;
     outline: none;
-    font-size: 18px;
+    font-size: 14px;
     transition: 0.4s;
 	-webkit-touch-callout:none;
 	-webkit-user-select:none;
@@ -847,11 +933,12 @@ input, select, button, option
 }
 
 .panel {
-    padding: 0 2px;
+    padding: 0 10px;
     background-color: white;
     max-height: 0;
     overflow: hidden;
-	font-family:"Fira Sans Condensed", arial, helvetica;
+	font-family:"PT Sans", arial, helvetica;
+    font-size: 12px;
     transition: max-height 0.2s ease-out;
 	-webkit-touch-callout:none;
 	-webkit-user-select:none;
