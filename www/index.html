@@ -170,7 +170,7 @@
         <div id="mark">&nbsp;</div>
         <!-- mark -->
         <a href="#" onclick="selectContent('calculation');">CALCULATION</a>
-        <a href="#" onclick="selectContent('package');">PACKAGE</a>
+        <a href="#" onclick="selectContent('package');">ACCOUNT</a>
         <a href="#" onclick="selectContent('news');">NEWS</a>
         <a href="#" onclick="selectContent('help');">HELP</a>
         <a href="#" onclick="javascript:showMinimo();">ABOUT</a>
@@ -280,8 +280,8 @@
                         <option value="0.45">45%</option>
                         <option value="0.5">50%</option>
                     </select><!--adv_dp-->
-                    <input id="auto-expectTdp" name="auto-expectTdp" type="number" placeholder="TDP yang diinginkan" value="120000000" style="display:none;" onkeyup="numberBlur(this);" autocomplete="off" />
-                    <input id="auto-expectUsl" name="auto-expectUsl" type="number" placeholder="Angsuran yang diinginkan" style="display:none;" onkeyup="numberBlur(this);" autocomplete="off" />
+                    <input id="auto-expectTdp" name="auto-expectTdp" type="number" placeholder="TDP yang diinginkan" style="display:none;" onfocus="numberFocus(this);" onblur="numberBlur(this);"autocomplete="off" />
+                    <input id="auto-expectUsl" name="auto-expectUsl" type="number" placeholder="Angsuran yang diinginkan" style="display:none;" onfocus="numberFocus(this);" onblur="numberBlur(this);" autocomplete="off" />
                     
                     <button onclick="autoFormSubmit();" value="submit" class="nextButton">Kalkulasi</button>
                     
@@ -351,8 +351,8 @@
                         <option value="0.45">45%</option>
                         <option value="0.5">50%</option>
                     </select><!--adv_dp-->
-                    <input id="adv-expectTdp" name="adv-expectTdp" type="number" value="150000000" onfocus="numberFocus(this);" onblur="numberBlur(this);" placeholder="TDP yang diinginkan" style="display:none;" autocomplete="off" />
-                    <input id="adv-expectUsl" name="adv-expectUsl" type="number" value="5500000" onfocus="numberFocus(this);" onblur="numberBlur(this);" placeholder="Angsuran yang diinginkan" style="display:none;"  autocomplete="off" />
+                    <input id="adv-expectTdp" name="adv-expectTdp" type="number" onfocus="numberFocus(this);" onblur="numberBlur(this);" placeholder="TDP yang diinginkan" style="display:none;" autocomplete="off" />
+                    <input id="adv-expectUsl" name="adv-expectUsl" type="number" onfocus="numberFocus(this);" onblur="numberBlur(this);" placeholder="Angsuran yang diinginkan" style="display:none;"  autocomplete="off" />
                     
                     <button onclick="advFormSubmit();" value="submit" class="nextButton">KALKULASI</button>
                     
