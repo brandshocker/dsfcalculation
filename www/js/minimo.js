@@ -1,6 +1,8 @@
 /////////////////////////// COMMON VARIABLES
+appVersion = "1.2.8";
 API = "https://dsfcalculation.000webhostapp.com/api/";
 active = "calculation";
+activePage = "calculation";
 signature = localStorage.getItem('signature');
 iteration = 1;
 admNpwp = 2325000;
@@ -60,6 +62,8 @@ navClose = function () {
         $('#menuCloser').css('visibility', 'hidden');
         // check if the page is calculation 
         if (activePage == "calculation") {
+            $('#newCalc').css('top', '150%');
+        } else if (activePage == "package") {
             $('#newCalc').css('top', '150%');
         } else {
             $('#newCalc').css('top', 'calc(100% - 100px)');
@@ -213,50 +217,30 @@ loginProcess = function () {
     });
 }
 
-login_check = function (username, password, gps_lat, gps_long) {
+login_check = function (username, password, gps_lat, gps_long, getTime) {
     var data = "username=" + username + "&password=" + password;
+    
+    if (localStorage.getItem('uname') != 'null') {
+        $('#login').css('margin-left', '100%');
+        if (gps_lat != "") {
+            var data1 = "username=" + username + "&gps_lat=" + gps_lat + "&gps_long=" + gps_long + "&getTime=" + getTime;
 
-    $.ajax({
-        type: "GET",
-        url: API + "mod_check.php?",
-        data: data,
-        cache: false,
-        success: function (result) {
-            $("#loader").hide();
-            switch (result) {
-                case "logged":
-                    localStorage.setItem('uname', username);
-                    localStorage.setItem('pass', password);
-                    $('#login').css('margin-left', '100%');
-                    if (gps_lat != "") {
-                        var data1 = "username=" + username + "&gps_lat=" + gps_lat + "&gps_long=" + gps_long;
+            $.ajax({
+                type: "GET",
+                url: API + "mod_update_loc.php?",
+                data: data1,
+                cache: false,
+                success: function (result) {
 
-
-                        $.ajax({
-                            type: "GET",
-                            url: API + "mod_update_loc.php?",
-                            data: data1,
-                            cache: false,
-                            success: function (result) {
-
-                            }
-                        });
-                    }
-
-                    return true;
-                    break;
-                case "false":
-                    $('#login').css('margin-left', '0%');
-                    $('#login-container').css('margin-left', '-200%');
-                    return false;
-                    break;
-                default:
-                    $('#login').css('margin-left', '0%');
-                    $('#login-container').css('margin-left', '-200%');
-                    return false;
-            }
+                }
+            });
         }
-    });
+    } else {
+        $('#login').css('margin-left', '0%');
+        $('#login-container').css('margin-left', '-200%');
+        return false;
+    }
+    
 }
 
 formLogin = function () {
@@ -277,6 +261,20 @@ hidePopup = function () {
     $('#popup').css('margin-left', '100%');
     active = "none";
     StatusBar.show();
+}
+
+calcCount = function () {
+    if (network == "online") {
+        $.ajax({
+            type: "GET",
+            url: API + "mod_calcCount.php?",
+            data: "username=" + localStorage.getItem('uname'),
+            cache: false,
+            success: function (result) {
+
+            }
+        });
+    }
 }
 
 setPopup = function (ele, val) {
@@ -371,8 +369,13 @@ selectContent = function (i) {
         activePage = "package";
         $('#container').css('margin-left', '-100%');
         $('#mark').css('top', '45px');
-
-        getUser();
+        if(network == "online")
+        {
+            getUser();
+        } else {
+            toast('Silahkan coba lagi ketika ada koneksi internet');
+            selectContent('calculation');
+        } 
     }
 
     if (i == "news") {
@@ -380,7 +383,14 @@ selectContent = function (i) {
         activePage = "news";
         $('#container').css('margin-left', '-200%');
         $('#mark').css('top', '90px');
-        loadNews('#content-news', API + 'mod_news.php');
+        
+        if(network == "online")
+        {
+            loadNews('#content-news', API + 'mod_news.php');
+        } else {
+            toast('Silahkan coba lagi ketika ada koneksi internet');
+            selectContent('calculation');
+        } 
     }
 
     if (i == "help") {
@@ -388,7 +398,14 @@ selectContent = function (i) {
         activePage = "help";
         $('#container').css('margin-left', '-300%');
         $('#mark').css('top', '135px');
-        loadNews('#content-help', API + 'mod_help.php');
+        
+        if(network == "online")
+        {
+            loadNews('#content-help', API + 'mod_help.php');
+        } else {
+            toast('Silahkan coba lagi ketika ada koneksi internet');
+            selectContent('calculation');
+        } 
     }
 
     o('Page : ' + activePage);
@@ -425,12 +442,29 @@ $(function () {
             objEvent.preventDefault(); // stops its action
         }
     })
+    
+    
+    // check version
+    $.getJSON(API + "mod_config.php", function (config) {
+        var curVersion = config["appversion"];
+        if (curVersion != appVersion)
+            {
+                $('#version').html('latest version : ' + curVersion);
+                $('#update').show();
+            } else {
+                $('#update').hide();
+            }
+    });
 
     // check login
     var site_user = localStorage.getItem('uname');
     var site_pass = localStorage.getItem('pass');
 
-
+    if(site_user == null)
+        {
+            localStorage.setItem('uname','null');
+            localStorage.setItem('pass','null');
+        }
 
     gps_lat = 0;
     gps_long = 0;
@@ -440,13 +474,30 @@ $(function () {
         gps_lat = position.coords.latitude;
         gps_long = position.coords.longitude;
 
-        login_check(site_user, site_pass, position.coords.latitude, position.coords.longitude);
+        login_check(site_user, site_pass, position.coords.latitude, position.coords.longitude, getDateTime());
     };
-
+    
+    network = "offline";
+    
+    onOnline = function()
+    {
+        o('Network : Online');
+        network = "online";
+    }
+    
+    onOffline = function()
+    {
+        o('Network : Offline')
+        network = "offline";
+    }
+    
+    document.addEventListener("online", onOnline, false);
+    document.addEventListener("offline", onOffline, false);    
+    
     // onError Callback receives a PositionError object
     //
     function onError(error) {
-        pop('Welcome');
+
     }
 
     navigator.geolocation.getCurrentPosition(onSuccess, onError);
@@ -513,6 +564,33 @@ numberFocus = function (i) {
     $(i).val(Number(str));
     $(i).attr('type', 'number');
     $(i).val(Number(str));
+}
+
+getDateTime = function() {
+    var now = new Date();
+    var year = now.getFullYear();
+    var month = now.getMonth() + 1;
+    var day = now.getDate();
+    var hour = now.getHours();
+    var minute = now.getMinutes();
+    var second = now.getSeconds();
+    if (month.toString().length == 1) {
+        var month = '0' + month;
+    }
+    if (day.toString().length == 1) {
+        var day = '0' + day;
+    }
+    if (hour.toString().length == 1) {
+        var hour = '0' + hour;
+    }
+    if (minute.toString().length == 1) {
+        var minute = '0' + minute;
+    }
+    if (second.toString().length == 1) {
+        var second = '0' + second;
+    }
+    var dateTime = year + '/' + month + '/' + day + ' ' + hour + ':' + minute + ':' + second;
+    return dateTime;
 }
 
 format = function (val) {
@@ -1186,9 +1264,9 @@ autoCalculate = function (package, otr, tenor, dp, adm, ins1, ins2, tjh, tjhTota
     //o('Calculate \n{ \n   otr : ' + otr + "\n   tenor : " + TENOR + "\n   dp : " + DP + "\n   adm : " + ADM + "\n   rate : " + rate + "\n   asuransi : " + INSURANCE + "\n   usl : " + USL + "\n   tpd : " + TDP + "\n   provisi : " + PROVISION + "/ " + provision + "\n   insurance incl : " + insInc + "\n   addb : " + addb + "\n}");
     signature = localStorage.getItem('signature');
     
-    var strWa = ('OTR : Rp. ' + format(Math.ceil(otr)) + "\nTenor : x " + tenor + "\nDP : Rp. " + format(Math.ceil(DP)) + " / " + DP_PERCENT + "\nAdm : Rp. " + format(Math.ceil(ADM)) + "\nRate : " + ((rate * 100).toFixed(2) + "%") + "\nAsuransi : Rp. " + format(Math.ceil(INSURANCE)) + " " + INSTEXT + "\nProvisi : Rp. " + format(Math.ceil(PROVISION)) + " / " + ((provision * 100).toFixed(2) + "%\nAngsuran : Rp. " + format(reround(USL)) + " x " + TENOR + "\nTDP : Rp. " + format(reround(TDP))) + "\n" + signature)
+    var strWa = ('Tipe : ' + TIPE + '\nOTR : Rp. ' + format(Math.ceil(otr)) + "\nTenor : x " + tenor + "\nDP : Rp. " + format(Math.ceil(DP)) + " / " + DP_PERCENT + "\nAdm : Rp. " + format(Math.ceil(ADM)) + "\nRate : " + ((rate * 100).toFixed(2) + "%") + "\nAsuransi : Rp. " + format(Math.ceil(INSURANCE)) + " " + INSTEXT + "\nProvisi : Rp. " + format(Math.ceil(PROVISION)) + " / " + ((provision * 100).toFixed(2) + "%\nAngsuran : Rp. " + format(reround(USL)) + " x " + TENOR + "\nTDP : Rp. " + format(reround(TDP))) + "\n" + signature)
 
-    var strSms = ('OTR : ' + format(Math.ceil(otr)) + ", Tenor : x " + tenor + ", DP : " + format(Math.ceil(DP)) + " / " + ((dp * 100).toFixed(2) + "%2525") + ", Adm : " + format(Math.ceil(ADM)) + ", Rate : " + ((rate * 100).toFixed(2) + "%2525") + ", Asuransi : " + format(Math.ceil(INSURANCE)) + " " + INSTEXT + ", Provisi : " + format(Math.ceil(PROVISION)) + " / " + ((provision * 100).toFixed(2) + "%2525, Angsuran : " + format(reround(USL)) + " x " + TENOR + ", TDP : " + format(reround(TDP))) + ", " + signature)
+    var strSms = ('Tipe : ' + TIPE + ', OTR : ' + format(Math.ceil(otr)) + ", Tenor : x " + tenor + ", DP : " + format(Math.ceil(DP)) + " / " + ((dp * 100).toFixed(2) + "%2525") + ", Adm : " + format(Math.ceil(ADM)) + ", Rate : " + ((rate * 100).toFixed(2) + "%2525") + ", Asuransi : " + format(Math.ceil(INSURANCE)) + " " + INSTEXT + ", Provisi : " + format(Math.ceil(PROVISION)) + " / " + ((provision * 100).toFixed(2) + "%2525, Angsuran : " + format(reround(USL)) + " x " + TENOR + ", TDP : " + format(reround(TDP))) + ", " + signature)
 
     var shareTextWa = encodeURIComponent(strWa);
 
@@ -1214,9 +1292,11 @@ autoCalculate = function (package, otr, tenor, dp, adm, ins1, ins2, tjh, tjhTota
     setPopup('#popup-dpText', DP_PERCENT);
     setPopup('#popup-rate', (rate * 100).toFixed(2) + "%");
     setPopup('#popup-textProvision', (provision * 100).toFixed(2) + "%");
-
-    showPopup();
+    
+    calcCount();
+    
     navigator.vibrate(50);
+    setCalcStatistic()
 }
 
 autoTdpCalculate = function (findTdp, otr, tenor, dp, adm, package, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb) {
@@ -1476,9 +1556,9 @@ calculate = function (otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal, insP
     
     signature = localStorage.getItem('signature');
     
-    var strWa = ('OTR : Rp. ' + format(Math.ceil(otr)) + "\nTenor : x " + tenor + "\nDP : Rp. " + format(Math.ceil(DP)) + " / " + DP_PERCENT + "\nAdm : Rp. " + format(Math.ceil(ADM)) + "\nRate : " + ((rate * 100).toFixed(2) + "%") + "\nAsuransi : Rp. " + format(Math.ceil(INSURANCE)) + " " + INSTEXT + "\nProvisi : Rp. " + format(Math.ceil(PROVISION)) + " / " + ((provision * 100).toFixed(2) + "%\nAngsuran : Rp. " + format(reround(USL)) + " x " + TENOR + "\nTDP : Rp. " + format(reround(TDP))) + "\n" + signature)
+    var strWa = ('Non Paket \nOTR : Rp. ' + format(Math.ceil(otr)) + "\nTenor : x " + tenor + "\nDP : Rp. " + format(Math.ceil(DP)) + " / " + DP_PERCENT + "\nAdm : Rp. " + format(Math.ceil(ADM)) + "\nRate : " + ((rate * 100).toFixed(2) + "%") + "\nAsuransi : Rp. " + format(Math.ceil(INSURANCE)) + " " + INSTEXT + "\nProvisi : Rp. " + format(Math.ceil(PROVISION)) + " / " + ((provision * 100).toFixed(2) + "%\nAngsuran : Rp. " + format(reround(USL)) + " x " + TENOR + "\nTDP : Rp. " + format(reround(TDP))) + "\n" + signature)
 
-    var strSms = ('OTR : ' + format(Math.ceil(otr)) + ", Tenor : x " + TENOR + ", DP : " + format(Math.ceil(DP)) + " / " + ((dp * 100).toFixed(2) + "%2525") + ", Adm : " + format(Math.ceil(ADM)) + ", Rate : " + ((rate * 100).toFixed(2) + "%2525") + ", Asuransi : " + format(Math.ceil(INSURANCE)) + " " + INSTEXT + ", Provisi : " + format(Math.ceil(PROVISION)) + " / " + ((provision * 100).toFixed(2) + "%2525, Angsuran : " + format(reround(USL)) + " x " + TENOR + ", TDP : " + format(reround(TDP))) + ", " + signature)
+    var strSms = ('Non Paket, OTR : ' + format(Math.ceil(otr)) + ", Tenor : x " + TENOR + ", DP : " + format(Math.ceil(DP)) + " / " + ((dp * 100).toFixed(2) + "%2525") + ", Adm : " + format(Math.ceil(ADM)) + ", Rate : " + ((rate * 100).toFixed(2) + "%2525") + ", Asuransi : " + format(Math.ceil(INSURANCE)) + " " + INSTEXT + ", Provisi : " + format(Math.ceil(PROVISION)) + " / " + ((provision * 100).toFixed(2) + "%2525, Angsuran : " + format(reround(USL)) + " x " + TENOR + ", TDP : " + format(reround(TDP))) + ", " + signature)
 
     var shareTextWa = encodeURIComponent(strWa);
 
@@ -1506,6 +1586,8 @@ calculate = function (otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal, insP
 
     showPopup();
     navigator.vibrate(50);
+    
+    calcCount();
 }
 
 calculateValue = function (otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb, result) {
@@ -1554,8 +1636,10 @@ calculateValue = function (otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal,
 
 updateUser = function()
 {
+    $('#loader').show();
     var dataPost = {
         "username": $('#user_username').val(),
+        "name": $('#user_name').val(),
         "email": $('#user_email').val(),
         "dealer": $('#user_dealer').val(),
         "signature": $('#user_signature').val() 
@@ -1564,12 +1648,13 @@ updateUser = function()
     var dataString = JSON.stringify(dataPost);
 
     $.ajax({
-        url: 'https://dsfcalculation.000webhostapp.com/api/mod_update.php',
+        url: API + 'mod_update.php',
         data: {
             myData: dataString
         },
         type: 'POST',
         success: function (response) {
+            $('#loader').hide();
             pop('Data disimpan');
             localStorage.setItem('signature', $('#user_signature').val());
         }
@@ -1580,8 +1665,9 @@ getUser = function()
 {
     $('#loader').show();
     var username = localStorage.getItem('uname');
-    $.getJSON("https://dsfcalculation.000webhostapp.com/api/mod_user.php?username=" + username, function (user) {
+    $.getJSON(API + "mod_user.php?username=" + username, function (user) {
         $('#user_username').val(user['username']);
+        $('#user_name').val(user['name']);
         $('#user_email').val(user['email']);
         $('#user_dealer').val(user['dealer']);
         $('#user_signature').val(user['signature']);
