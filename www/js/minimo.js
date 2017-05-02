@@ -96,51 +96,53 @@ hideMinimo = function () {
 }
 
 registerProcess = function () {
-    $("#loader").show();
+    if (network == "online") {
+        $("#loader").show();
 
-    var uname = $('#reg-username').val().toLowerCase();
-    var email = $('#reg-email').val();
-    var pass = $('#reg-password').val();
-    var pass2 = $('#reg-password-2').val();
-    var data = "username=" + uname + "&email=" + email + "&password=" + pass + "&gps_lat=" + gps_lat + "&gps_long=" + gps_long;
+        var uname = $('#reg-username').val().toLowerCase();
+        var email = $('#reg-email').val();
+        var pass = $('#reg-password').val();
+        var pass2 = $('#reg-password-2').val();
+        var data = "username=" + uname + "&email=" + email + "&password=" + pass + "&gps_lat=" + gps_lat + "&gps_long=" + gps_long;
 
-    if (uname == '') {
-        $("#loader").hide();
-        toast('Silahkan masukan username');
-    } else if (email == '') {
-        $("#loader").hide();
-        toast('Silahkan masukan Email anda');
-    } else if (pass == '') {
-        $("#loader").hide();
-        toast('Masukan Password anda');
-    } else if (pass != pass2) {
-        $("#loader").hide();
-        toast('Konfirmasi password salah');
-    } else {
-        o('Do Register');
-        // AJAX Code To Submit Form.
-        $.ajax({
-            type: "GET",
-            url: API + "mod_register.php?",
-            data: data,
-            cache: false,
-            success: function (result) {
-                $("#loader").hide();
-                switch (result) {
-                    case "success":
-                        localStorage.setItem('uname', uname);
-                        localStorage.setItem('pass', pass);
-                        pop('Registrasi berhasil')
-                        $('#login').css('margin-left', '300%');
-                        break;
-                    case "failed":
-                        toast('Registrasi gagal');
-                        break;
-                    default:
-                        toast(result);
+        if (uname == '') {
+            $("#loader").hide();
+            toast('Silahkan masukan username');
+        } else if (email == '') {
+            $("#loader").hide();
+            toast('Silahkan masukan Email anda');
+        } else if (pass == '') {
+            $("#loader").hide();
+            toast('Masukan Password anda');
+        } else if (pass != pass2) {
+            $("#loader").hide();
+            toast('Konfirmasi password salah');
+        } else {
+            o('Do Register');
+            // AJAX Code To Submit Form.
+            $.ajax({
+                type: "GET",
+                url: API + "mod_register.php?",
+                data: data,
+                cache: false,
+                success: function (result) {
+                    $("#loader").hide();
+                    switch (result) {
+                        case "success":
+                            localStorage.setItem('uname', uname);
+                            localStorage.setItem('pass', pass);
+                            pop('Registrasi berhasil')
+                            $('#login').css('margin-left', '300%');
+                            break;
+                        case "failed":
+                            toast('Registrasi gagal');
+                            break;
+                        default:
+                            toast(result);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 }
 
@@ -154,67 +156,70 @@ logout = function () {
 }
 
 loginProcess = function () {
-    $('#loader').show();
-    var username = $('#login-username').val().toLocaleLowerCase();
-    var password = $('#login-password').val()
-    var data = "username=" + username + "&password=" + password;
+    if (network == "online") {
+        $('#loader').show();
+        var username = $('#login-username').val().toLocaleLowerCase();
+        var password = $('#login-password').val()
+        var data = "username=" + username + "&password=" + password;
 
-    $.ajax({
-        type: "GET",
-        url: API + "mod_check.php?",
-        data: data,
-        cache: false,
-        success: function (result) {
-            $("#loader").hide();
-            switch (result) {
-                case "logged":
-                    localStorage.setItem('uname', username);
-                    localStorage.setItem('pass', password);
-                    $('#login').css('margin-left', '100%');
-                    $.ajax({
-                        type: "GET",
-                        url: API + "mod_userprofile.php?",
-                        data: "username=" + username,
-                        cache: false,
-                        success: function (result) {
-                            pop('Profile loaded');
-                            localStorage.setItem('signature', result);
-                        }
-                    });
-                    
-                    if (gps_lat != "") {
-                        var data1 = "username=" + username + "&gps_lat=" + gps_lat + "&gps_long=" + gps_long;
-
-
+        $.ajax({
+            type: "GET",
+            url: API + "mod_check.php?",
+            data: data,
+            cache: false,
+            success: function (result) {
+                $("#loader").hide();
+                switch (result) {
+                    case "logged":
+                        localStorage.setItem('uname', username);
+                        localStorage.setItem('pass', password);
+                        $('#login').css('margin-left', '100%');
                         $.ajax({
                             type: "GET",
-                            url: API + "mod_update_loc.php?",
-                            data: data1,
+                            url: API + "mod_userprofile.php?",
+                            data: "username=" + username,
                             cache: false,
                             success: function (result) {
-
+                                pop('Profile loaded');
+                                localStorage.setItem('signature', result);
                             }
                         });
-                    }
 
-                    return true;
-                    break;
-                case "false":
-                    $('#loader').hide();
-                    toast('Username dan password salah');
-                    $('#login').css('margin-left', '0%');
-                    $('#login-container').css('margin-left', '-100%');
-                    return false;
-                    break;
-                default:
-                    $('#loader').hide();
-                    toast('Username dan password salah');
-                    $('#login').css('margin-left', '0%');
-                    $('#login-container').css('margin-left', '-100%');
-                    return false;
+                        if (gps_lat != "") {
+                            var data1 = "username=" + username + "&gps_lat=" + gps_lat + "&gps_long=" + gps_long;
+
+
+                            $.ajax({
+                                type: "GET",
+                                url: API + "mod_update_loc.php?",
+                                data: data1,
+                                cache: false,
+                                success: function (result) {
+
+                                }
+                            });
+                        }
+
+                        return true;
+                        break;
+                    case "false":
+                        $('#loader').hide();
+                        toast('Username dan password salah');
+                        $('#login').css('margin-left', '0%');
+                        $('#login-container').css('margin-left', '-100%');
+                        return false;
+                        break;
+                    default:
+                        $('#loader').hide();
+                        toast('Username dan password salah');
+                        $('#login').css('margin-left', '0%');
+                        $('#login-container').css('margin-left', '-100%');
+                        return false;
+                }
             }
-        }
-    });
+        });
+    }
+
 }
 
 login_check = function (username, password, gps_lat, gps_long, getTime) {
@@ -563,7 +568,11 @@ numberFocus = function (i) {
     str = str.replace(/\%/g, "");
     $(i).val(Number(str));
     $(i).attr('type', 'number');
-    $(i).val(Number(str));
+    if($(i).val() == ""){
+        
+    } else {
+        $(i).val(Number(str));
+    }
 }
 
 getDateTime = function() {
