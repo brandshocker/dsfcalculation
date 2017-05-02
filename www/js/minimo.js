@@ -143,6 +143,8 @@ registerProcess = function () {
                 }
             });
         }
+    } else {
+        toast('Silahkan cek koneksi anda');
     }
 }
 
@@ -218,8 +220,9 @@ loginProcess = function () {
                 }
             }
         });
+    } else {
+        toast('Silahkan cek koneksi anda');
     }
-
 }
 
 login_check = function (username, password, gps_lat, gps_long, getTime) {
