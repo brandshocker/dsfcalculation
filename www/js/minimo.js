@@ -1294,9 +1294,8 @@ autoCalculate = function (package, otr, tenor, dp, adm, ins1, ins2, tjh, tjhTota
     setPopup('#popup-textProvision', (provision * 100).toFixed(2) + "%");
     
     calcCount();
-    
+    showPopup();
     navigator.vibrate(50);
-    setCalcStatistic()
 }
 
 autoTdpCalculate = function (findTdp, otr, tenor, dp, adm, package, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb) {
