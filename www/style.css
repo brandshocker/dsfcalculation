@@ -260,6 +260,7 @@ input, select, button, option
     overflow: hidden;
     z-index: 98;
     transition: 0.3s;
+    margin-left: 100%;
 }
 
 #login-container
@@ -848,6 +849,22 @@ input, select, button, option
     background:#9d2023 url("ui/toggler.png");
 }
 
+#update
+{
+    width:100%;
+	height:100%;
+	display:table;
+	text-align:center;
+	font-family:"Fira Sans Condensed", verdana, arial;
+	font-size:11px;
+	color:#ffb9bb;
+	position:fixed;
+	z-index:100;
+	background:#b72025;
+	transition:0.3s;
+    display: none;
+}
+
 .block
 {
     float: left;
@@ -871,6 +888,12 @@ input, select, button, option
 	overflow-x:hidden;
 	overflow-y:auto;
 	font-family:"Fira Sans Condensed", arial, helvetica;
+}
+
+.block a,
+.block-clean a
+{
+    color: #444;
 }
 
 .spacer
@@ -919,6 +942,11 @@ input, select, button, option
 
 .accordion p {
 	padding :10px;
+}
+
+.accordion a
+{
+    color: #666 !important;
 }
 
 .footer 
