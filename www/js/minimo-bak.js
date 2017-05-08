@@ -1,14 +1,8 @@
 /////////////////////////// COMMON VARIABLES
-appVersion = "1.2.8";
-API = "https://dsfcalculation.000webhostapp.com/api/";
 active = "calculation";
-activePage = "calculation";
-signature = localStorage.getItem('signature');
 iteration = 1;
 admNpwp = 2325000;
 admNonNpwp = 2625000;
-advSeek = false;
-dpSeek = 0.9;
 /////////////////////////// IMPORTANT
 o = function (i) {
     console.log(i);
@@ -65,8 +59,6 @@ navClose = function () {
         // check if the page is calculation 
         if (activePage == "calculation") {
             $('#newCalc').css('top', '150%');
-        } else if (activePage == "package") {
-            $('#newCalc').css('top', '150%');
         } else {
             $('#newCalc').css('top', 'calc(100% - 100px)');
         }
@@ -97,197 +89,19 @@ hideMinimo = function () {
     StatusBar.show();
 }
 
-registerProcess = function () {
-    if (network == "online") {
-        $("#loader").show();
-
-        var uname = $('#reg-username').val().toLowerCase();
-        var email = $('#reg-email').val();
-        var pass = $('#reg-password').val();
-        var pass2 = $('#reg-password-2').val();
-        var data = "username=" + uname + "&email=" + email + "&password=" + pass + "&gps_lat=" + gps_lat + "&gps_long=" + gps_long;
-
-        if (uname == '') {
-            $("#loader").hide();
-            toast('Silahkan masukan username');
-        } else if (email == '') {
-            $("#loader").hide();
-            toast('Silahkan masukan Email anda');
-        } else if (pass == '') {
-            $("#loader").hide();
-            toast('Masukan Password anda');
-        } else if (pass != pass2) {
-            $("#loader").hide();
-            toast('Konfirmasi password salah');
-        } else {
-            o('Do Register');
-            // AJAX Code To Submit Form.
-            $.ajax({
-                type: "GET",
-                url: API + "mod_register.php?",
-                data: data,
-                cache: false,
-                success: function (result) {
-                    $("#loader").hide();
-                    switch (result) {
-                        case "success":
-                            localStorage.setItem('uname', uname);
-                            localStorage.setItem('pass', pass);
-                            pop('Registrasi berhasil')
-                            $('#login').css('margin-left', '300%');
-                            break;
-                        case "failed":
-                            toast('Registrasi gagal');
-                            break;
-                        default:
-                            toast(result);
-                    }
-                }
-            });
-        }
-    } else {
-        toast('Silahkan cek koneksi anda');
-    }
-}
-
-logout = function () {
-    $('#login').css('margin-left', '0%');
-    localStorage.setItem('uname', 'null');
-    localStorage.setItem('pass', 'null');
-    hideMinimo();
-    login_check();
-
-}
-
-loginProcess = function () {
-    if (network == "online") {
-        $('#loader').show();
-        var username = $('#login-username').val().toLocaleLowerCase();
-        var password = $('#login-password').val()
-        var data = "username=" + username + "&password=" + password;
-
-        $.ajax({
-            type: "GET",
-            url: API + "mod_check.php?",
-            data: data,
-            cache: false,
-            success: function (result) {
-                $("#loader").hide();
-                switch (result) {
-                    case "logged":
-                        localStorage.setItem('uname', username);
-                        localStorage.setItem('pass', password);
-                        $('#login').css('margin-left', '100%');
-                        $.ajax({
-                            type: "GET",
-                            url: API + "mod_userprofile.php?",
-                            data: "username=" + username,
-                            cache: false,
-                            success: function (result) {
-                                pop('Profile loaded');
-                                localStorage.setItem('signature', result);
-                            }
-                        });
-
-                        if (gps_lat != "") {
-                            var data1 = "username=" + username + "&gps_lat=" + gps_lat + "&gps_long=" + gps_long;
-
-
-                            $.ajax({
-                                type: "GET",
-                                url: API + "mod_update_loc.php?",
-                                data: data1,
-                                cache: false,
-                                success: function (result) {
-
-                                }
-                            });
-                        }
-
-                        return true;
-                        break;
-                    case "false":
-                        $('#loader').hide();
-                        toast('Username dan password salah');
-                        $('#login').css('margin-left', '0%');
-                        $('#login-container').css('margin-left', '-100%');
-                        return false;
-                        break;
-                    default:
-                        $('#loader').hide();
-                        toast('Username dan password salah');
-                        $('#login').css('margin-left', '0%');
-                        $('#login-container').css('margin-left', '-100%');
-                        return false;
-                }
-            }
-        });
-    } else {
-        toast('Silahkan cek koneksi anda');
-    }
-}
-
-login_check = function (username, password, gps_lat, gps_long, getTime) {
-    var data = "username=" + username + "&password=" + password;
-
-    if (localStorage.getItem('uname') != 'null') {
-        $('#login').css('margin-left', '100%');
-        if (gps_lat != "") {
-            var data1 = "username=" + username + "&gps_lat=" + gps_lat + "&gps_long=" + gps_long + "&getTime=" + getTime;
-
-            $.ajax({
-                type: "GET",
-                url: API + "mod_update_loc.php?",
-                data: data1,
-                cache: false,
-                success: function (result) {
-
-                }
-            });
-        }
-    } else {
-        $('#login').css('margin-left', '0%');
-        $('#login-container').css('margin-left', '-200%');
-        return false;
-    }
-
-}
-
-formLogin = function () {
-    $('#login-container').css('margin-left', '-100%');
-}
-
-formRegister = function () {
-    $('#login-container').css('margin-left', '0');
-}
-
-showPopup = function () {
+showPopup = function() {
     $('#popup').css('margin-left', '0%');
     active = "popup";
     StatusBar.hide();
 }
 
-hidePopup = function () {
+hidePopup = function() {
     $('#popup').css('margin-left', '100%');
     active = "none";
     StatusBar.show();
 }
 
-calcCount = function () {
-    if (network == "online") {
-        $.ajax({
-            type: "GET",
-            url: API + "mod_calcCount.php?",
-            data: "username=" + localStorage.getItem('uname'),
-            cache: false,
-            success: function (result) {
-
-            }
-        });
-    }
-}
-
-setPopup = function (ele, val) {
+setPopup = function(ele, val) {
     if (val == null) {
         val = "&nbsp;";
     }
@@ -379,12 +193,6 @@ selectContent = function (i) {
         activePage = "package";
         $('#container').css('margin-left', '-100%');
         $('#mark').css('top', '45px');
-        if (network == "online") {
-            getUser();
-        } else {
-            toast('Silahkan coba lagi ketika ada koneksi internet');
-            selectContent('calculation');
-        }
     }
 
     if (i == "news") {
@@ -392,13 +200,6 @@ selectContent = function (i) {
         activePage = "news";
         $('#container').css('margin-left', '-200%');
         $('#mark').css('top', '90px');
-
-        if (network == "online") {
-            loadNews('#content-news', API + 'mod_news.php');
-        } else {
-            toast('Silahkan coba lagi ketika ada koneksi internet');
-            selectContent('calculation');
-        }
     }
 
     if (i == "help") {
@@ -406,13 +207,6 @@ selectContent = function (i) {
         activePage = "help";
         $('#container').css('margin-left', '-300%');
         $('#mark').css('top', '135px');
-
-        if (network == "online") {
-            loadNews('#content-help', API + 'mod_help.php');
-        } else {
-            toast('Silahkan coba lagi ketika ada koneksi internet');
-            selectContent('calculation');
-        }
     }
 
     o('Page : ' + activePage);
@@ -436,10 +230,7 @@ $(function () {
 
     document.addEventListener('deviceready', function () {
         document.addEventListener("backbutton", onBackKeyDown, false);
-
-        if (window.cordova && StatusBar) {
-            StatusBar.backgroundColorByHexString('#b72025');
-        }
+        StatusBar.backgroundColorByHexString('#b72025');
 
     }); // on device ready
 
@@ -452,64 +243,6 @@ $(function () {
             objEvent.preventDefault(); // stops its action
         }
     })
-
-
-    // check version
-    $.getJSON(API + "mod_config.php", function (config) {
-        var curVersion = config["appversion"];
-        if (curVersion != appVersion) {
-            $('#version').html('latest version : ' + curVersion);
-            $('#update').show();
-        } else {
-            $('#update').hide();
-        }
-    });
-
-    // check login
-    var site_user = localStorage.getItem('uname');
-    var site_pass = localStorage.getItem('pass');
-
-    if (site_user == null) {
-        localStorage.setItem('uname', 'null');
-        localStorage.setItem('pass', 'null');
-    }
-
-    gps_lat = 0;
-    gps_long = 0;
-    // Get Coordinate
-    var onSuccess = function (position) {
-        o('Lat: ' + position.coords.latitude + '\n' + 'Long: ' + position.coords.longitude + '\n');
-        gps_lat = position.coords.latitude;
-        gps_long = position.coords.longitude;
-
-        login_check(site_user, site_pass, position.coords.latitude, position.coords.longitude, getDateTime());
-    };
-
-    network = "offline";
-
-    onOnline = function () {
-        o('Network : Online');
-        network = "online";
-    }
-
-    onOffline = function () {
-        o('Network : Offline')
-        network = "offline";
-    }
-
-    document.addEventListener("online", onOnline, false);
-    document.addEventListener("offline", onOffline, false);
-
-    // onError Callback receives a PositionError object
-    //
-    function onError(error) {
-
-    }
-
-    navigator.geolocation.getCurrentPosition(onSuccess, onError);
-
-
-
 });
 
 
@@ -536,11 +269,7 @@ onBackKeyDown = function () {
             break;
         default:
             pop('long press to exit')
-            navigator.Backbutton.goHome(function () {
-                console.log('success')
-            }, function () {
-                console.log('fail')
-            });
+            navigator.app.backHistory();
     }
 }
 
@@ -549,7 +278,7 @@ rc = function (i) {
     o(i + " : " + obj);
 };
 
-numberize = function (input) {
+numberize = function(input) {
     var nStr = input.value + '';
     nStr = nStr.replace(/\,/g, "");
     var x = nStr.split('.');
@@ -569,38 +298,7 @@ numberFocus = function (i) {
     str = str.replace(/\%/g, "");
     $(i).val(Number(str));
     $(i).attr('type', 'number');
-    if ($(i).val() == "") {
-
-    } else {
-        $(i).val(Number(str));
-    }
-}
-
-getDateTime = function () {
-    var now = new Date();
-    var year = now.getFullYear();
-    var month = now.getMonth() + 1;
-    var day = now.getDate();
-    var hour = now.getHours();
-    var minute = now.getMinutes();
-    var second = now.getSeconds();
-    if (month.toString().length == 1) {
-        var month = '0' + month;
-    }
-    if (day.toString().length == 1) {
-        var day = '0' + day;
-    }
-    if (hour.toString().length == 1) {
-        var hour = '0' + hour;
-    }
-    if (minute.toString().length == 1) {
-        var minute = '0' + minute;
-    }
-    if (second.toString().length == 1) {
-        var second = '0' + second;
-    }
-    var dateTime = year + '/' + month + '/' + day + ' ' + hour + ':' + minute + ':' + second;
-    return dateTime;
+    $(i).val(Number(str));
 }
 
 format = function (val) {
@@ -683,10 +381,6 @@ autoFormSubmit = function () {
     autoExpectDp = r('#auto-expectDp');
     autoExpectTdp = validateNumber(r('#auto-expectTdp'));
     autoExpectUsl = validateNumber(r('#auto-expectUsl'));
-    autoMaxOtr = r('#auto-maxOtr');
-    autoMinDp = r('#auto-minDp');
-
-    o('autoMaxOtr : ' + autoMaxOtr);
 
     if (r('#auto-npwp') == 'yes') {
         autoAdm = admNpwp;
@@ -702,12 +396,6 @@ autoFormSubmit = function () {
         toast('Silahkan pilih tipe kendaraan')
     } else if (autoOtr == "") {
         toast('Silahkan masukan harga OTR kendaraan');
-    } else if (autoOtr > autoMaxOtr) {
-        toast('Harga maksimal kendaraan Rp. ' + format(autoMaxOtr))
-    } else if (autoTenor == "") {
-        toast('Pilih tenor kredit')
-    } else if (autoInsurance == '') {
-        toast('Pilih tipe asuransi')
     } else {
         $.getJSON("json/" + autoType + ".json", function (package) {
 
@@ -1094,7 +782,7 @@ advFormSubmit = function () {
                         $('#loader').hide();
                         toast('Silahkan masukan USL yang diinginkan');
                     } else {
-                        var findDp = advUslCalculate(advExpectUsl, advOtr, advTenor, 0.2, advAdm, advRate, ins1, insuranceTotal, advTjh, tjhTotal, insuranceNI, advProvision, advInsInclude, advAddb);
+                        var findDp = advUslCalculate(advExpectUsl, advOtr, advTenor, 0.5, advAdm, advRate, ins1, insuranceTotal, advTjh, tjhTotal, insuranceNI, advProvision, advInsInclude, advAddb);
 
                         if (findDp == false) {
                             toast('Perhitungan tidak ditemukan')
@@ -1278,11 +966,10 @@ autoCalculate = function (package, otr, tenor, dp, adm, ins1, ins2, tjh, tjhTota
     }
 
     //o('Calculate \n{ \n   otr : ' + otr + "\n   tenor : " + TENOR + "\n   dp : " + DP + "\n   adm : " + ADM + "\n   rate : " + rate + "\n   asuransi : " + INSURANCE + "\n   usl : " + USL + "\n   tpd : " + TDP + "\n   provisi : " + PROVISION + "/ " + provision + "\n   insurance incl : " + insInc + "\n   addb : " + addb + "\n}");
-    signature = localStorage.getItem('signature');
 
-    var strWa = ('Tipe : ' + TIPE + '\nOTR : Rp. ' + format(Math.ceil(otr)) + "\nTenor : x " + tenor + "\nDP : Rp. " + format(Math.ceil(DP)) + " / " + DP_PERCENT + "\nAdm : Rp. " + format(Math.ceil(ADM)) + "\nRate : " + ((rate * 100).toFixed(2) + "%") + "\nAsuransi : Rp. " + format(Math.ceil(INSURANCE)) + " " + INSTEXT + "\nProvisi : Rp. " + format(Math.ceil(PROVISION)) + " / " + ((provision * 100).toFixed(2) + "%\nAngsuran : Rp. " + format(reround(USL)) + " x " + TENOR + "\nTDP : Rp. " + format(reround(TDP))) + "\n" + signature)
+    var strWa = ('OTR : Rp. ' + format(Math.ceil(otr)) + "\nTenor : x " + TENOR + "\nDP : Rp. " + format(Math.ceil(DP)) + " / " + DP_PERCENT + "\nAdm : Rp. " + format(Math.ceil(ADM)) + "\nRate : " + ((rate * 100).toFixed(2) + "%") + "\nAsuransi : Rp. " + format(Math.ceil(INSURANCE)) + " " + INSTEXT + "\nProvisi : Rp. " + format(Math.ceil(PROVISION)) + " / " + ((provision * 100).toFixed(2) + "%\nAngsuran : Rp. " + format(reround(USL)) + "\nTDP : Rp. " + format(reround(TDP))) + "\n(DSF Angga - 08112754802, brandshocker@gmail.com)")
 
-    var strSms = ('Tipe : ' + TIPE + ', OTR : ' + format(Math.ceil(otr)) + ", Tenor : x " + tenor + ", DP : " + format(Math.ceil(DP)) + " / " + ((dp * 100).toFixed(2) + "%2525") + ", Adm : " + format(Math.ceil(ADM)) + ", Rate : " + ((rate * 100).toFixed(2) + "%2525") + ", Asuransi : " + format(Math.ceil(INSURANCE)) + " " + INSTEXT + ", Provisi : " + format(Math.ceil(PROVISION)) + " / " + ((provision * 100).toFixed(2) + "%2525, Angsuran : " + format(reround(USL)) + " x " + TENOR + ", TDP : " + format(reround(TDP))) + ", " + signature)
+    var strSms = ('OTR : ' + format(Math.ceil(otr)) + ", Tenor : x " + TENOR + ", DP : " + format(Math.ceil(DP)) + " / " + ((dp * 100).toFixed(2) + "%2525") + ", Adm : " + format(Math.ceil(ADM)) + ", Rate : " + ((rate * 100).toFixed(2) + "%2525") + ", Asuransi : " + format(Math.ceil(INSURANCE)) + " " + INSTEXT + ", Provisi : " + format(Math.ceil(PROVISION)) + " / " + ((provision * 100).toFixed(2) + "%2525, Angsuran : " + format(reround(USL)) + ", TDP : " + format(reround(TDP))) + ", (DSF Angga - 08112754802, brandshocker@gmail.com)")
 
     var shareTextWa = encodeURIComponent(strWa);
 
@@ -1309,12 +996,11 @@ autoCalculate = function (package, otr, tenor, dp, adm, ins1, ins2, tjh, tjhTota
     setPopup('#popup-rate', (rate * 100).toFixed(2) + "%");
     setPopup('#popup-textProvision', (provision * 100).toFixed(2) + "%");
 
-    calcCount();
     showPopup();
     navigator.vibrate(50);
 }
 
-autoTdpCalculate = function (findTdp, otr, tenor, dp, adm, package, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb) {
+autoTdpCalculate = function(findTdp, otr, tenor, dp, adm, package, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb) {
     var ADM = adm;
     var DP = otr * dp;
     var DP_PERCENT = ((dp * 100).toFixed(2)) + " %";
@@ -1333,8 +1019,8 @@ autoTdpCalculate = function (findTdp, otr, tenor, dp, adm, package, ins1, ins2, 
         INSTEXT = 'Dimuka';
         TJH = tjhTotal;
     }
-
-    rate = ratePicker(package, tenor, dp);
+    
+    rate = ratePicker(package,tenor,dp);
 
     // CALCULATE USL
     var USL = (NI_TOTAL + ((NI_TOTAL * rate) * (tenor / 12))) / tenor;
@@ -1367,7 +1053,7 @@ autoTdpCalculate = function (findTdp, otr, tenor, dp, adm, package, ins1, ins2, 
     }
 };
 
-advTdpCalculate = function (findTdp, otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb) {
+advTdpCalculate = function(findTdp, otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb) {
     var ADM = adm;
     var DP = otr * dp;
     var DP_PERCENT = ((dp * 100).toFixed(2)) + " %";
@@ -1418,7 +1104,7 @@ advTdpCalculate = function (findTdp, otr, tenor, dp, adm, rate, ins1, ins2, tjh,
     }
 };
 
-autoUslCalculate = function (findUsl, otr, tenor, dp, adm, package, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb) {
+autoUslCalculate = function(findUsl, otr, tenor, dp, adm, package, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb) {
     var ADM = adm;
     var DP = otr * dp;
     var DP_PERCENT = ((dp * 100).toFixed(2)) + " %";
@@ -1436,7 +1122,7 @@ autoUslCalculate = function (findUsl, otr, tenor, dp, adm, package, ins1, ins2, 
         TJH = tjhTotal;
     }
 
-    rate = ratePicker(package, tenor, dp);
+    rate = ratePicker(package,tenor,dp);
 
     // CALCULATE USL
     var USL = (NI_TOTAL + ((NI_TOTAL * rate) * (tenor / 12))) / tenor;
@@ -1448,16 +1134,12 @@ autoUslCalculate = function (findUsl, otr, tenor, dp, adm, package, ins1, ins2, 
         var TDP = DP + ADM + INSURANCE + PROVISION + TJH;
         var TENOR = '' + tenor + ' [ADDB]';
     }
-    var spread = USL - findUsl;
     
-    if (iteration == 2999 && advSeek == false) {
-        if (spread < 1000 && spread > -1000) {
+    if (iteration == 999) {
+        var spread = USL - findUsl;
+        if (spread < 1000) {
             USL = findUsl;
-        }
-    }
-    
-    if(advSeek == true){
-        if(spread < 1000 && spread > -1000){
+        } else if (spread < 0 && spread > -1000) {
             USL = findUsl;
         }
     }
@@ -1467,42 +1149,22 @@ autoUslCalculate = function (findUsl, otr, tenor, dp, adm, package, ins1, ins2, 
         $('#loader').hide();
         return dp;
     } else {
-        if (advSeek == false) {
-            if (iteration < 3000) {
-                iteration++
-                //var newDp = ((DP / (Number(findUsl) / USL)));
-                var newDp = ((DP / (Number(findUsl) / USL)));
-
-                newDp = (newDp / otr);
-
-                // o(iteration + ' > usl : ' + format(USL) + ' Expect : ' + format(findUsl) + '  dp : ' + newDp);
-                return autoUslCalculate(findUsl, otr, tenor, newDp, adm, package, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb);
-            } else {
-                advSeek = true;
-                iteration = 1;
-                return autoUslCalculate(findUsl, otr, tenor, dpSeek, adm, package, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb);
-            }
+        if (iteration < 1000) {
+            iteration++
+            var newDp = ((DP / (Number(findUsl) / USL)));
+            newDp = (newDp / otr);
+            o(iteration + ' > tdp : ' + format(TDP) + ' Expect : ' + format(findUsl) + '  dp : ' + newDp);
+            return autoUslCalculate(findUsl, otr, tenor, newDp, adm, package, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb);
         } else {
-            if (iteration < 3000) {
-                dpSeek = dpSeek - 0.0001;
-               //  o(dpSeek + " : " + iteration);
-                iteration++;
-                return autoUslCalculate(findUsl, otr, tenor, dpSeek, adm, package, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb);        
-            } else {
-                $('#loader').hide();
-                iteration = 1;
-                dpSeek = 1;
-                advSeek = false;
-                return false;
-            }
-
+            $('#loader').hide();
+            iteration = 1;
+            return false;
         }
-
 
     }
 };
 
-advUslCalculate = function (findUsl, otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb) {
+advUslCalculate = function(findUsl, otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb) {
     var ADM = adm;
     var DP = otr * dp;
     var NI_PURE = otr - DP;
@@ -1529,56 +1191,30 @@ advUslCalculate = function (findUsl, otr, tenor, dp, adm, rate, ins1, ins2, tjh,
     } else {
         var TDP = DP + ADM + INSURANCE + PROVISION + TJH;
     }
-    
-    var spread = USL - findUsl;
-    
-    if (iteration == 999 && advSeek == false) {
-        
-        if (spread < 1000 && spread > -1000) {
+    if (iteration == 999) {
+        var spread = USL - findUsl;
+        if (spread < 1000) {
+            USL = findUsl;
+        } else if (spread < 0 && spread > -1000) {
             USL = findUsl;
         }
     }
-    
-    if(advSeek == true){
-        if(spread < 1000 && spread > -1000){
-            USL = findUsl;
-        }
-    }
-    
     if (USL == findUsl) {
         iteration = 1;
         $('#loader').hide();
         return dp;
     } else {
-        if (advSeek == false) {
-            if (iteration < 3000) {
-                iteration++
-                iteration++
+        if (iteration < 1000) {
+            iteration++
             var newDp = (DP / (Number(findUsl) / USL));
             newDp = (newDp / otr);
             o(iteration + ' > Usl : ' + format(USL) + ' Expect : ' + format(findUsl) + ' Dp : ' + newDp);
             return advUslCalculate(findUsl, otr, tenor, newDp, adm, rate, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb);
-            } else {
-                advSeek = true;
-                iteration = 1;
-                return advUslCalculate(findUsl, otr, tenor, dpSeek, adm, rate, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb);
-            }
         } else {
-            if (iteration < 3000) {
-                dpSeek = dpSeek - 0.0001;
-               //  o(dpSeek + " : " + iteration);
-                iteration++;
-                return advUslCalculate(findUsl, otr, tenor, dpSeek, adm, rate, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb);        
-            } else {
-                $('#loader').hide();
-                iteration = 1;
-                dpSeek = 0.9;
-                advSeek = false;
-                return false;
-            }
-
+            iteration = 1;
+            $('#loader').hide();
+            return false;
         }
-
 
     }
 };
@@ -1619,17 +1255,9 @@ calculate = function (otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal, insP
 
     //o('Calculate \n{ \n   otr : ' + otr + "\n   tenor : " + TENOR + "\n   dp : " + DP + "\n   adm : " + ADM + "\n   rate : " + rate + "\n   asuransi : " + INSURANCE + "\n   usl : " + USL + "\n   tpd : " + TDP + "\n   provisi : " + PROVISION + "/ " + provision + "\n   insurance incl : " + insInc + "\n   addb : " + addb + "\n}");
 
-    signature = localStorage.getItem('signature');
+    var strWa = ('OTR : Rp. ' + format(Math.ceil(otr)) + "\nTenor : x " + TENOR + "\nDP : Rp. " + format(Math.ceil(DP)) + " / " + DP_PERCENT + "\nAdm : Rp. " + format(Math.ceil(ADM)) + "\nRate : " + ((rate * 100).toFixed(2) + "%") + "\nAsuransi : Rp. " + format(Math.ceil(INSURANCE)) + " " + INSTEXT + "\nProvisi : Rp. " + format(Math.ceil(PROVISION)) + " / " + ((provision * 100).toFixed(2) + "%\nAngsuran : Rp. " + format(reround(USL)) + "\nTDP : Rp. " + format(reround(TDP))) + "\n(DSF Angga - 08112754802, brandshocker@gmail.com)")
 
-    if (r('#adv-unit') == '') {
-        var Unit = "Non Paket";
-    } else {
-        var Unit = r('#adv-unit');
-    }
-
-    var strWa = (Unit + ' \nOTR : Rp. ' + format(Math.ceil(otr)) + "\nTenor : x " + tenor + "\nDP : Rp. " + format(Math.ceil(DP)) + " / " + DP_PERCENT + "\nAdm : Rp. " + format(Math.ceil(ADM)) + "\nRate : " + ((rate * 100).toFixed(2) + "%") + "\nAsuransi : Rp. " + format(Math.ceil(INSURANCE)) + " " + INSTEXT + "\nProvisi : Rp. " + format(Math.ceil(PROVISION)) + " / " + ((provision * 100).toFixed(2) + "%\nAngsuran : Rp. " + format(reround(USL)) + " x " + TENOR + "\nTDP : Rp. " + format(reround(TDP))) + "\n" + signature)
-
-    var strSms = (Unit + ', OTR : ' + format(Math.ceil(otr)) + ", Tenor : x " + TENOR + ", DP : " + format(Math.ceil(DP)) + " / " + ((dp * 100).toFixed(2) + "%2525") + ", Adm : " + format(Math.ceil(ADM)) + ", Rate : " + ((rate * 100).toFixed(2) + "%2525") + ", Asuransi : " + format(Math.ceil(INSURANCE)) + " " + INSTEXT + ", Provisi : " + format(Math.ceil(PROVISION)) + " / " + ((provision * 100).toFixed(2) + "%2525, Angsuran : " + format(reround(USL)) + " x " + TENOR + ", TDP : " + format(reround(TDP))) + ", " + signature)
+    var strSms = ('OTR : ' + format(Math.ceil(otr)) + ", Tenor : x " + TENOR + ", DP : " + format(Math.ceil(DP)) + " / " + ((dp * 100).toFixed(2) + "%2525") + ", Adm : " + format(Math.ceil(ADM)) + ", Rate : " + ((rate * 100).toFixed(2) + "%2525") + ", Asuransi : " + format(Math.ceil(INSURANCE)) + " " + INSTEXT + ", Provisi : " + format(Math.ceil(PROVISION)) + " / " + ((provision * 100).toFixed(2) + "%2525, Angsuran : " + format(reround(USL)) + ", TDP : " + format(reround(TDP))) + ", (DSF Angga - 08112754802, brandshocker@gmail.com)")
 
     var shareTextWa = encodeURIComponent(strWa);
 
@@ -1641,7 +1269,6 @@ calculate = function (otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal, insP
     });
 
     // DISPLAY ON POPUP CONTAINER
-    setPopup('#popup-tipe', Unit);
     setPopup('#popup-otr', format(Math.ceil(otr)));
     setPopup('#popup-csp', format(Math.ceil(DP)));
     setPopup('#popup-adm', format(Math.ceil(ADM)));
@@ -1658,8 +1285,6 @@ calculate = function (otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal, insP
 
     showPopup();
     navigator.vibrate(50);
-
-    calcCount();
 }
 
 calculateValue = function (otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal, insPh, provision, insInc, addb, result) {
@@ -1706,74 +1331,7 @@ calculateValue = function (otr, tenor, dp, adm, rate, ins1, ins2, tjh, tjhTotal,
     }
 }
 
-updateUser = function () {
-    $('#loader').show();
-    var dataPost = {
-        "username": $('#user_username').val(),
-        "name": $('#user_name').val(),
-        "email": $('#user_email').val(),
-        "dealer": $('#user_dealer').val(),
-        "signature": $('#user_signature').val()
-    };
-
-    var dataString = JSON.stringify(dataPost);
-
-    $.ajax({
-        url: API + 'mod_update.php',
-        data: {
-            myData: dataString
-        },
-        type: 'POST',
-        success: function (response) {
-            $('#loader').hide();
-            pop('Data disimpan');
-            localStorage.setItem('signature', $('#user_signature').val());
-        }
-    });
-}
-
-getUser = function () {
-    $('#loader').show();
-    var username = localStorage.getItem('uname');
-    $.getJSON(API + "mod_user.php?username=" + username, function (user) {
-        $('#user_username').val(user['username']);
-        $('#user_name').val(user['name']);
-        $('#user_email').val(user['email']);
-        $('#user_dealer').val(user['dealer']);
-        $('#user_signature').val(user['signature']);
-        $('#loader').hide();
-    });
-}
-
-loadNews = function (target, url) {
-    $('#loader').show();
-    $(target).load(url, function (responseTxt, statusTxt, xhr) {
-        if (statusTxt == "success")
-            $('#loader').hide();
-        // pop("Content loaded successfully!");
-
-        var acc = document.getElementsByClassName("accordion");
-        var i;
-
-        for (i = 0; i < acc.length; i++) {
-            acc[i].onclick = function () {
-                this.classList.toggle("active");
-                var panel = this.nextElementSibling;
-                if (panel.style.maxHeight) {
-                    panel.style.maxHeight = null;
-
-                } else {
-                    panel.style.maxHeight = panel.scrollHeight + "px";
-                }
-            }
-        }
-        if (statusTxt == "error")
-            $('#loader').hide();
-        // toast("Error: Couldn't connect to internet " + xhr.status + ": " + xhr.statusText);
-    });
-}
-
-ratePicker = function (package, tenor, dp) {
+ratePicker = function(package,tenor,dp){
     switch (tenor) {
         case "12":
             if (dp >= 0.1 && dp < 0.15) {
@@ -1898,8 +1456,6 @@ selectType = function () {
         success: function () {
             $.getJSON("json/" + selected + ".json", function (type) {
                 $('#auto-otr').attr('placeholder', 'Harga maksimal : Rp. ' + format(type['maxPrice']));
-                $('#auto-maxOtr').val(type['maxPrice']);
-                $('#auto-minDp').val(type['minCsp']);
             });
         }
     });
@@ -1908,18 +1464,16 @@ selectType = function () {
 }
 
 var carsAndModels = {};
-carsAndModels['Pajero'] = ['-- Silahkan pilih kategori', 'DAKAR 4X4 AT LIMITED', 'DAKAR 4X4 AT', 'DAKAR 4X2 AT LIMITED', 'DAKAR 4X2 AT', 'EXCEED 4X2 AT', 'EXCEED 4X2 MT', 'GLX 4X4 MT'];
+carsAndModels['Pajero'] = ['-- Silahkan pilih kategori', 'DAKAR 4X4 GLX [M/T]', 'DAKAR 4X2 [A/T]', 'DAKAR 4X2 [A/T] LIMITED', 'EXCEED 4X2 [M/T]', 'DAKAR 4X4 [A/T]', 'DAKAR 4X4 [M/T] LIMITED'];
 carsAndModels['Mirage'] = ['-- Silahkan pilih kategori', 'Mirage Exceed', 'Mirage GLS', 'Mirage GLX'];
-carsAndModels['Outlander'] = ['-- Silahkan pilih kategori', 'Outlander PX', 'Outlander GLS', 'Outlander GLX'];
-carsAndModels['Fuso'] = ['-- Silahkan pilih kategori', 'FM 517 HS', 'FM 517 HL', 'FM 517 HL LONG', 'FN 517 ML2', 'FN 517 ML2 SUPER LONG', 'FN 527 MS', 'FN 527 ML', 'FJ 2523', 'FJ 2528', 'FI 1217', 'FZ 4928 TH', 'FZ 4028 TH'];
+carsAndModels['Outlander'] = ['-- Silahkan pilih kategori', 'Outlander Exceed', 'Outlander GLS', 'Outlander GLX'];
+carsAndModels['Fuso'] = ['-- Silahkan pilih kategori', 'FM 517 HS', 'FM 517 HL', 'FM 517 HL LONG', 'FN 517 ML2', 'FN 517 ML2 SUPER LONG', 'FN 527 MS', 'FN 527 ML', 'FJ 2523', 'FJ 2528', 'FI 1217', 'FZ 4928 TH'];
 carsAndModels['FE Normal'] = ['-- Silahkan pilih kategori', 'FE 71', 'FE 71 (ESPASIO)', 'FE 71 BC', 'FE 71 L - FE 71 LCB - FL 71 PS', 'FE 73', 'FE 73 HD', 'FE 74 HDV', 'FE 74 S', 'FE 83 BC', 'FE 83 G HDL', 'FE 84 G BC', 'FE 83 G HDL', 'FE 84 G BC'];
 carsAndModels['FE Spesial'] = ['-- Silahkan pilih kategori', 'SP FE 71', 'SP FE 71 (ESPASIO)', 'SP FE 71 BC', 'SP FE 71 L - FE 71 LCB - FL 71 PS', 'SP FE 73', 'SP FE 73 HD', 'SP FE 74 HDV', 'SP FE 74 S', 'SP FE 83 BC', 'SP FE 83 G HDL', 'SP FE 84 G BC', 'SP FE 83 G HDL', 'SP FE 84 G BC'];
-carsAndModels['L300'] = ['-- Silahkan pilih kategori', 'L300 FB-FD', 'L300 Standard', 'L300 Minibus'];
-carsAndModels['Triton DC'] = ['-- Silahkan pilih kategori', 'All New Triton DC Exceed AT', 'All New Triton DC Exceed AT Limited', 'All New Triton DC Exceed MT', 'All New Triton DC Exceed MT Limited', 'All New Triton DC GLS', 'All New Triton DC HDX']
-carsAndModels['Triton SC'] = ['-- Silahkan pilih kategori', 'All New Triton SC HDX']
-carsAndModels['ColtT'] = ['-- Silahkan pilih kategori', 'Colt T120 SS FB-FD', 'Colt T120 SS Standard', 'Colt T120 SS 3 Ways'];
+carsAndModels['L300'] = ['-- Silahkan pilih kategori', 'L300 FB/FD', 'L300 Standard', 'L300 Minibus'];
+carsAndModels['ColtT'] = ['-- Silahkan pilih kategori', 'Colt T120 SS FB/FD', 'Colt T120 SS Standard', 'Colt T120 SS 3 Ways'];
 
-ChangeCatList = function () {
+ChangeCatList = function() {
     var carList = document.getElementById("auto-category");
     var modelList = document.getElementById("auto-type");
     var selCar = carList.options[carList.selectedIndex].value;
@@ -1933,8 +1487,6 @@ ChangeCatList = function () {
         case "Outlander":
             var type = "PC";
             break;
-        case "Triton DC":
-            var type = "PC"
         default:
             var type = "CV";
     }
@@ -2044,7 +1596,7 @@ insurancePick = function (price, arr) {
     }
 }
 
-autoInsIncToggle = function () {
+autoInsIncToggle = function() {
     navigator.vibrate(30);
 
     if ($('#auto-insInclude').val() == "no") {
@@ -2058,7 +1610,7 @@ autoInsIncToggle = function () {
     }
 }
 
-autoAddbToggle = function () {
+autoAddbToggle = function() {
     navigator.vibrate(30);
 
     if ($('#auto-addb').val() == "no") {
@@ -2072,7 +1624,7 @@ autoAddbToggle = function () {
     }
 };
 
-autoNpwpToggle = function () {
+autoNpwpToggle = function() {
     navigator.vibrate(30);
 
     if ($('#auto-npwp').val() == "no") {
@@ -2086,7 +1638,7 @@ autoNpwpToggle = function () {
     }
 };
 
-advInsIncToggle = function () {
+advInsIncToggle = function() {
     navigator.vibrate(30);
 
     if ($('#adv-insInclude').val() == "no") {
@@ -2100,7 +1652,7 @@ advInsIncToggle = function () {
     }
 }
 
-advAddbToggle = function () {
+advAddbToggle = function() {
     navigator.vibrate(30);
 
     if ($('#adv-addb').val() == "no") {

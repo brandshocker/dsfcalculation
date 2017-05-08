@@ -229,6 +229,8 @@
                         <option value="FE Normal">Mitsubishi FE (Normal)</option>
                         <option value="FE Spesial">Mitsubishi FE (Spesial)</option>
                         <option value="L300">Mitsubishi L300 Series</option>
+                        <option value="Triton DC">Mitsubishi Triton Double Cabin</option>
+                        <option value="Triton SC">Mitsubishi Triton Single Cabin</option>
                         <option value="ColtT">Mitsubishi Colt T120 SS</option>
                     </select>
                     
@@ -238,6 +240,8 @@
                     </select> 
                     <div class="caption">Masukan harga OTR</div>
                     <input id="auto-otr" name="auto-otr" type="number" placeholder="Harga OTR" onfocus="numberFocus(this);" onblur="numberBlur(this);" autocomplete="off" />
+                    <input id="auto-maxOtr" name="auto-maxOtr" class="inputHidden" />
+                    <input id="auto-minDp" name="auto-minDp" class="inputHidden" />
                     <div class="caption">Pilih Tenor kredit</div>
                     <select id="auto-tenor" name="auto-tenor">
                         <option value="">-- Pilih Tenor</option>
@@ -307,6 +311,8 @@
                         <div id="tabManualContainer">
             <div ="manualSlide1" class="slide"><!--manualSlide1-->
                 <form onsubmit="return false;">
+                    <div class="caption">Ketik nama unit</div>
+                    <input id="adv-unit" name="adv-unit" placeholder="Nama Unit" />
                     <div class="caption">Masukan harga OTR</div>
                     <input id="adv-otr" name="adv-otr" onfocus="numberFocus(this);" onblur="numberBlur(this);" type="number" placeholder="Harga OTR" autocomplete="off" />
                     <div class="caption">Pilih Tenor kredit</div>
