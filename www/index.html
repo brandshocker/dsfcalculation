@@ -223,14 +223,15 @@
                     <select id="auto-category" name="auto_category" onchange="ChangeCatList()"> 
                         <option value="#">-- Pilih Kategori</option>
                         <option value="Pajero">Mitsubishi All New Pajero</option>
+                        <option value="Xpander">Mitsubishi Xpander</option>
                         <option value="Mirage">Mitsubishi New Mirage</option>
                         <option value="Outlander">Mitsubishi New Outlander</option>
-                        <option value="Fuso">Mitsubishi FUSO Series</option>
-                        <option value="FE Normal">Mitsubishi FE (Normal)</option>
+                        <!--<option value="Fuso">Mitsubishi FUSO Series</option>-->
+                        <!--<option value="FE Normal">Mitsubishi FE (Normal)</option>-->
                         <option value="FE Spesial">Mitsubishi FE (Spesial)</option>
                         <option value="L300">Mitsubishi L300 Series</option>
-                        <option value="Triton DC">Mitsubishi Triton Double Cabin</option>
-                        <option value="Triton SC">Mitsubishi Triton Single Cabin</option>
+                        <!--<option value="Triton DC">Mitsubishi Triton Double Cabin</option>
+                        <option value="Triton SC">Mitsubishi Triton Single Cabin</option>-->
                         <option value="ColtT">Mitsubishi Colt T120 SS</option>
                     </select>
                     
@@ -288,14 +289,14 @@
                     </select><!--adv_method-->
                     
                     <select id="auto-expectDp" name="auto-expectDp">
+                        <option value="0.5">5%</option>
+                        <option value="0.10">10%</option>
                         <option value="0.15">15%</option>
                         <option value="0.2" selected>20%</option>
                         <option value="0.25">25%</option>
                         <option value="0.3">30%</option>
                         <option value="0.35">35%</option>
                         <option value="0.4">40%</option>
-                        <option value="0.45">45%</option>
-                        <option value="0.5">50%</option>
                     </select><!--adv_dp-->
                     <input id="auto-expectTdp" name="auto-expectTdp" type="number" placeholder="TDP yang diinginkan" style="display:none;" onfocus="numberFocus(this);" onblur="numberBlur(this);"autocomplete="off" />
                     <input id="auto-expectUsl" name="auto-expectUsl" type="number" placeholder="Angsuran yang diinginkan" style="display:none;" onfocus="numberFocus(this);" onblur="numberBlur(this);" autocomplete="off" />
@@ -361,6 +362,8 @@
                     </select><!--adv_method-->
                     
                     <select id="adv-expectDp" name="adv-expectDp">
+                        <option value="0.5">5%</option>
+                        <option value="0.10">10%</option>
                         <option value="0.15">15%</option>
                         <option value="0.2" selected>20%</option>
                         <option value="0.25">25%</option>
