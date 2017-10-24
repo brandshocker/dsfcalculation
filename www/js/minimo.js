@@ -1958,6 +1958,9 @@ ChangeCatList = function () {
         case "Outlander":
             var type = "PC";
             break;
+        case "Xpander":
+            var type = "PC";
+            break;
         case "Triton DC":
             var type = "PC"
         default:
