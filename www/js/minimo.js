@@ -1,5 +1,5 @@
 /////////////////////////// COMMON VARIABLES
-appVersion = "1.2.9";
+appVersion = "1.3.0";
 API = "https://dsfcalculation.000webhostapp.com/api/";
 active = "calculation";
 activePage = "calculation";
