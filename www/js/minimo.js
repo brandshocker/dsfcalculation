@@ -834,8 +834,8 @@ autoFormSubmit = function () {
                                         }
                                         break;
                                     default:
-                                        if (expectDp < 0.1) {
-                                            toast('DP minimal 10%')
+                                        if (expectDp < 0.05) {
+                                            toast('DP minimal 5%')
                                         } else {
                                             proceed = true;
                                         }
@@ -867,8 +867,8 @@ autoFormSubmit = function () {
                                         }
                                         break;
                                     default:
-                                        if (expectDp < 0.1) {
-                                            toast('DP minimal 10%')
+                                        if (expectDp < 0.05) {
+                                            toast('DP minimal 5%')
                                         } else {
                                             proceed = true;
                                         }
@@ -1052,7 +1052,7 @@ advFormSubmit = function () {
                     if (advExpectTdp == "") {
                         toast('Silahkan masukan TDP yang diinginkan');
                     } else {
-                        var findDp = advTdpCalculate(advExpectTdp, advOtr, advTenor, 0.1, advAdm, advRate, ins1, insuranceTotal, advTjh, tjhTotal, insuranceNI, advProvision, advInsInclude, advAddb);
+                        var findDp = advTdpCalculate(advExpectTdp, advOtr, advTenor, 0.05, advAdm, advRate, ins1, insuranceTotal, advTjh, tjhTotal, insuranceNI, advProvision, advInsInclude, advAddb);
 
                         if (findDp == false) {
                             toast('Perhitungan tidak ditemukan')
@@ -1068,9 +1068,9 @@ advFormSubmit = function () {
                                     }
                                     break;
                                 default:
-                                    if (findDp < 0.10) {
-                                        var minTDP = calculateValue(advOtr, advTenor, 0.1, advAdm, advRate, ins1, insuranceTotal, advTjh, tjhTotal, insuranceNI, advProvision, advInsInclude, advAddb, "TDP");
-                                        toast('Minimum DP 10% (Total pembayaran Rp. ' + format(minTDP) + ")");
+                                    if (findDp < 0.05) {
+                                        var minTDP = calculateValue(advOtr, advTenor, 0.05, advAdm, advRate, ins1, insuranceTotal, advTjh, tjhTotal, insuranceNI, advProvision, advInsInclude, advAddb, "TDP");
+                                        toast('Minimum DP 5% (Total pembayaran Rp. ' + format(minTDP) + ")");
                                     } else {
                                         proceed = true;
                                     }
@@ -1109,9 +1109,9 @@ advFormSubmit = function () {
                                     }
                                     break;
                                 default:
-                                    if (findDp < 0.10) {
-                                        var maxUsl = calculateValue(advOtr, advTenor, 0.1, advAdm, advRate, ins1, insuranceTotal, advTjh, tjhTotal, insuranceNI, advProvision, advInsInclude, advAddb, "USL");
-                                        toast('Minimum DP 10% (Maksimum angsuran Rp. ' + format(maxUsl) + ")");
+                                    if (findDp < 0.05) {
+                                        var maxUsl = calculateValue(advOtr, advTenor, 0.05, advAdm, advRate, ins1, insuranceTotal, advTjh, tjhTotal, insuranceNI, advProvision, advInsInclude, advAddb, "USL");
+                                        toast('Minimum DP 5% (Maksimum angsuran Rp. ' + format(maxUsl) + ")");
                                     } else {
                                         proceed = true;
                                     }
@@ -1147,105 +1147,117 @@ autoCalculate = function (package, otr, tenor, dp, adm, ins1, ins2, tjh, tjhTota
     var TIPE = package['type'];
     switch (tenor) {
         case "12":
-            if (dp >= 0.1 && dp < 0.15) {
-                rate = package['a1'];
-            } else if (dp >= 0.15 && dp < 0.2) {
+            if (dp >= 0.05 && dp < 0.1){
+                rate = package['a1'];  
+            } else if (dp >= 0.1 && dp < 0.15) {
                 rate = package['a2'];
-            } else if (dp >= 0.2 && dp < 0.25) {
+            } else if (dp >= 0.15 && dp < 0.2) {
                 rate = package['a3'];
-            } else if (dp >= 0.25 && dp < 0.3) {
+            } else if (dp >= 0.2 && dp < 0.25) {
                 rate = package['a4'];
-            } else if (dp >= 0.3 && dp < 0.35) {
+            } else if (dp >= 0.25 && dp < 0.3) {
                 rate = package['a5'];
-            } else if (dp >= 0.35 && dp < 0.4) {
+            } else if (dp >= 0.3 && dp < 0.35) {
                 rate = package['a6'];
-            } else if (dp >= 0.4 && dp < 1) {
+            } else if (dp >= 0.35 && dp < 0.4) {
                 rate = package['a7'];
+            } else if (dp >= 0.4 && dp < 1) {
+                rate = package['a8'];
             }
             break;
         case "24":
-            if (dp >= 0.1 && dp < 0.15) {
-                rate = package['b1'];
-            } else if (dp >= 0.15 && dp < 0.2) {
+            if (dp >= 0.05 && dp < 0.1){
+                rate = package['b1'];  
+            } else if (dp >= 0.1 && dp < 0.15) {
                 rate = package['b2'];
-            } else if (dp >= 0.2 && dp < 0.25) {
+            } else if (dp >= 0.15 && dp < 0.2) {
                 rate = package['b3'];
-            } else if (dp >= 0.25 && dp < 0.3) {
+            } else if (dp >= 0.2 && dp < 0.25) {
                 rate = package['b4'];
-            } else if (dp >= 0.3 && dp < 0.35) {
+            } else if (dp >= 0.25 && dp < 0.3) {
                 rate = package['b5'];
-            } else if (dp >= 0.35 && dp < 0.4) {
+            } else if (dp >= 0.3 && dp < 0.35) {
                 rate = package['b6'];
-            } else if (dp >= 0.4 && dp < 1) {
+            } else if (dp >= 0.35 && dp < 0.4) {
                 rate = package['b7'];
+            } else if (dp >= 0.4 && dp < 1) {
+                rate = package['b8'];
             }
             break;
         case "25":
-            if (dp >= 0.1 && dp < 0.15) {
-                rate = package['b1'];
-            } else if (dp >= 0.15 && dp < 0.2) {
+            if (dp >= 0.05 && dp < 0.1){
+                rate = package['b1'];  
+            } else if (dp >= 0.1 && dp < 0.15) {
                 rate = package['b2'];
-            } else if (dp >= 0.2 && dp < 0.25) {
+            } else if (dp >= 0.15 && dp < 0.2) {
                 rate = package['b3'];
-            } else if (dp >= 0.25 && dp < 0.3) {
+            } else if (dp >= 0.2 && dp < 0.25) {
                 rate = package['b4'];
-            } else if (dp >= 0.3 && dp < 0.35) {
+            } else if (dp >= 0.25 && dp < 0.3) {
                 rate = package['b5'];
-            } else if (dp >= 0.35 && dp < 0.4) {
+            } else if (dp >= 0.3 && dp < 0.35) {
                 rate = package['b6'];
-            } else if (dp >= 0.4 && dp < 1) {
+            } else if (dp >= 0.35 && dp < 0.4) {
                 rate = package['b7'];
+            } else if (dp >= 0.4 && dp < 1) {
+                rate = package['b8'];
             }
             break;
         case "36":
-            if (dp >= 0.1 && dp < 0.15) {
-                rate = package['c1'];
-            } else if (dp >= 0.15 && dp < 0.2) {
+            if (dp >= 0.05 && dp < 0.1){
+                rate = package['c1'];  
+            } else if (dp >= 0.1 && dp < 0.15) {
                 rate = package['c2'];
-            } else if (dp >= 0.2 && dp < 0.25) {
+            } else if (dp >= 0.15 && dp < 0.2) {
                 rate = package['c3'];
-            } else if (dp >= 0.25 && dp < 0.3) {
+            } else if (dp >= 0.2 && dp < 0.25) {
                 rate = package['c4'];
-            } else if (dp >= 0.3 && dp < 0.35) {
+            } else if (dp >= 0.25 && dp < 0.3) {
                 rate = package['c5'];
-            } else if (dp >= 0.35 && dp < 0.4) {
+            } else if (dp >= 0.3 && dp < 0.35) {
                 rate = package['c6'];
-            } else if (dp >= 0.4 && dp < 1) {
+            } else if (dp >= 0.35 && dp < 0.4) {
                 rate = package['c7'];
+            } else if (dp >= 0.4 && dp < 1) {
+                rate = package['c8'];
             }
             break;
         case "48":
-            if (dp >= 0.1 && dp < 0.15) {
-                rate = package['d1'];
-            } else if (dp >= 0.15 && dp < 0.2) {
+            if (dp >= 0.05 && dp < 0.1){
+                rate = package['d1'];  
+            } else if (dp >= 0.1 && dp < 0.15) {
                 rate = package['d2'];
-            } else if (dp >= 0.2 && dp < 0.25) {
+            } else if (dp >= 0.15 && dp < 0.2) {
                 rate = package['d3'];
-            } else if (dp >= 0.25 && dp < 0.3) {
+            } else if (dp >= 0.2 && dp < 0.25) {
                 rate = package['d4'];
-            } else if (dp >= 0.3 && dp < 0.35) {
+            } else if (dp >= 0.25 && dp < 0.3) {
                 rate = package['d5'];
-            } else if (dp >= 0.35 && dp < 0.4) {
+            } else if (dp >= 0.3 && dp < 0.35) {
                 rate = package['d6'];
-            } else if (dp >= 0.4 && dp < 1) {
+            } else if (dp >= 0.35 && dp < 0.4) {
                 rate = package['d7'];
+            } else if (dp >= 0.4 && dp < 1) {
+                rate = package['8'];
             }
             break;
         case "60":
-            if (dp >= 0.1 && dp < 0.15) {
-                rate = package['e1'];
-            } else if (dp >= 0.15 && dp < 0.2) {
+            if (dp >= 0.05 && dp < 0.1){
+                rate = package['e1'];  
+            } else if (dp >= 0.1 && dp < 0.15) {
                 rate = package['e2'];
-            } else if (dp >= 0.2 && dp < 0.25) {
+            } else if (dp >= 0.15 && dp < 0.2) {
                 rate = package['e3'];
-            } else if (dp >= 0.25 && dp < 0.3) {
+            } else if (dp >= 0.2 && dp < 0.25) {
                 rate = package['e4'];
-            } else if (dp >= 0.3 && dp < 0.35) {
+            } else if (dp >= 0.25 && dp < 0.3) {
                 rate = package['e5'];
-            } else if (dp >= 0.35 && dp < 0.4) {
+            } else if (dp >= 0.3 && dp < 0.35) {
                 rate = package['e6'];
-            } else if (dp >= 0.4 && dp < 1) {
+            } else if (dp >= 0.35 && dp < 0.4) {
                 rate = package['e7'];
+            } else if (dp >= 0.4 && dp < 1) {
+                rate = package['e8'];
             }
             break;
     }
@@ -1776,105 +1788,117 @@ loadNews = function (target, url) {
 ratePicker = function (package, tenor, dp) {
     switch (tenor) {
         case "12":
-            if (dp >= 0.1 && dp < 0.15) {
-                rate = package['a1'];
-            } else if (dp >= 0.15 && dp < 0.2) {
+            if (dp >= 0.05 && dp < 0.1){
+                rate = package['a1'];  
+            } else if (dp >= 0.1 && dp < 0.15) {
                 rate = package['a2'];
-            } else if (dp >= 0.2 && dp < 0.25) {
+            } else if (dp >= 0.15 && dp < 0.2) {
                 rate = package['a3'];
-            } else if (dp >= 0.25 && dp < 0.3) {
+            } else if (dp >= 0.2 && dp < 0.25) {
                 rate = package['a4'];
-            } else if (dp >= 0.3 && dp < 0.35) {
+            } else if (dp >= 0.25 && dp < 0.3) {
                 rate = package['a5'];
-            } else if (dp >= 0.35 && dp < 0.4) {
+            } else if (dp >= 0.3 && dp < 0.35) {
                 rate = package['a6'];
-            } else if (dp >= 0.4 && dp < 1) {
+            } else if (dp >= 0.35 && dp < 0.4) {
                 rate = package['a7'];
+            } else if (dp >= 0.4 && dp < 1) {
+                rate = package['a8'];
             }
             break;
         case "24":
-            if (dp >= 0.1 && dp < 0.15) {
-                rate = package['b1'];
-            } else if (dp >= 0.15 && dp < 0.2) {
+            if (dp >= 0.05 && dp < 0.1){
+                rate = package['b1'];  
+            } else if (dp >= 0.1 && dp < 0.15) {
                 rate = package['b2'];
-            } else if (dp >= 0.2 && dp < 0.25) {
+            } else if (dp >= 0.15 && dp < 0.2) {
                 rate = package['b3'];
-            } else if (dp >= 0.25 && dp < 0.3) {
+            } else if (dp >= 0.2 && dp < 0.25) {
                 rate = package['b4'];
-            } else if (dp >= 0.3 && dp < 0.35) {
+            } else if (dp >= 0.25 && dp < 0.3) {
                 rate = package['b5'];
-            } else if (dp >= 0.35 && dp < 0.4) {
+            } else if (dp >= 0.3 && dp < 0.35) {
                 rate = package['b6'];
-            } else if (dp >= 0.4 && dp < 1) {
+            } else if (dp >= 0.35 && dp < 0.4) {
                 rate = package['b7'];
+            } else if (dp >= 0.4 && dp < 1) {
+                rate = package['b8'];
             }
             break;
         case "25":
-            if (dp >= 0.1 && dp < 0.15) {
-                rate = package['b1'];
-            } else if (dp >= 0.15 && dp < 0.2) {
+            if (dp >= 0.05 && dp < 0.1){
+                rate = package['b1'];  
+            } else if (dp >= 0.1 && dp < 0.15) {
                 rate = package['b2'];
-            } else if (dp >= 0.2 && dp < 0.25) {
+            } else if (dp >= 0.15 && dp < 0.2) {
                 rate = package['b3'];
-            } else if (dp >= 0.25 && dp < 0.3) {
+            } else if (dp >= 0.2 && dp < 0.25) {
                 rate = package['b4'];
-            } else if (dp >= 0.3 && dp < 0.35) {
+            } else if (dp >= 0.25 && dp < 0.3) {
                 rate = package['b5'];
-            } else if (dp >= 0.35 && dp < 0.4) {
+            } else if (dp >= 0.3 && dp < 0.35) {
                 rate = package['b6'];
-            } else if (dp >= 0.4 && dp < 1) {
+            } else if (dp >= 0.35 && dp < 0.4) {
                 rate = package['b7'];
+            } else if (dp >= 0.4 && dp < 1) {
+                rate = package['b8'];
             }
             break;
         case "36":
-            if (dp >= 0.1 && dp < 0.15) {
-                rate = package['c1'];
-            } else if (dp >= 0.15 && dp < 0.2) {
+            if (dp >= 0.05 && dp < 0.1){
+                rate = package['c1'];  
+            } else if (dp >= 0.1 && dp < 0.15) {
                 rate = package['c2'];
-            } else if (dp >= 0.2 && dp < 0.25) {
+            } else if (dp >= 0.15 && dp < 0.2) {
                 rate = package['c3'];
-            } else if (dp >= 0.25 && dp < 0.3) {
+            } else if (dp >= 0.2 && dp < 0.25) {
                 rate = package['c4'];
-            } else if (dp >= 0.3 && dp < 0.35) {
+            } else if (dp >= 0.25 && dp < 0.3) {
                 rate = package['c5'];
-            } else if (dp >= 0.35 && dp < 0.4) {
+            } else if (dp >= 0.3 && dp < 0.35) {
                 rate = package['c6'];
-            } else if (dp >= 0.4 && dp < 1) {
+            } else if (dp >= 0.35 && dp < 0.4) {
                 rate = package['c7'];
+            } else if (dp >= 0.4 && dp < 1) {
+                rate = package['c8'];
             }
             break;
         case "48":
-            if (dp >= 0.1 && dp < 0.15) {
-                rate = package['d1'];
-            } else if (dp >= 0.15 && dp < 0.2) {
+            if (dp >= 0.05 && dp < 0.1){
+                rate = package['d1'];  
+            } else if (dp >= 0.1 && dp < 0.15) {
                 rate = package['d2'];
-            } else if (dp >= 0.2 && dp < 0.25) {
+            } else if (dp >= 0.15 && dp < 0.2) {
                 rate = package['d3'];
-            } else if (dp >= 0.25 && dp < 0.3) {
+            } else if (dp >= 0.2 && dp < 0.25) {
                 rate = package['d4'];
-            } else if (dp >= 0.3 && dp < 0.35) {
+            } else if (dp >= 0.25 && dp < 0.3) {
                 rate = package['d5'];
-            } else if (dp >= 0.35 && dp < 0.4) {
+            } else if (dp >= 0.3 && dp < 0.35) {
                 rate = package['d6'];
-            } else if (dp >= 0.4 && dp < 1) {
+            } else if (dp >= 0.35 && dp < 0.4) {
                 rate = package['d7'];
+            } else if (dp >= 0.4 && dp < 1) {
+                rate = package['8'];
             }
             break;
         case "60":
-            if (dp >= 0.1 && dp < 0.15) {
-                rate = package['e1'];
-            } else if (dp >= 0.15 && dp < 0.2) {
+            if (dp >= 0.05 && dp < 0.1){
+                rate = package['e1'];  
+            } else if (dp >= 0.1 && dp < 0.15) {
                 rate = package['e2'];
-            } else if (dp >= 0.2 && dp < 0.25) {
+            } else if (dp >= 0.15 && dp < 0.2) {
                 rate = package['e3'];
-            } else if (dp >= 0.25 && dp < 0.3) {
+            } else if (dp >= 0.2 && dp < 0.25) {
                 rate = package['e4'];
-            } else if (dp >= 0.3 && dp < 0.35) {
+            } else if (dp >= 0.25 && dp < 0.3) {
                 rate = package['e5'];
-            } else if (dp >= 0.35 && dp < 0.4) {
+            } else if (dp >= 0.3 && dp < 0.35) {
                 rate = package['e6'];
-            } else if (dp >= 0.4 && dp < 1) {
+            } else if (dp >= 0.35 && dp < 0.4) {
                 rate = package['e7'];
+            } else if (dp >= 0.4 && dp < 1) {
+                rate = package['e8'];
             }
             break;
     }
@@ -1908,8 +1932,9 @@ selectType = function () {
 }
 
 var carsAndModels = {};
-carsAndModels['Pajero'] = ['-- Silahkan pilih kategori', 'DAKAR 4X4 AT LIMITED', 'DAKAR 4X4 AT', 'DAKAR 4X2 AT LIMITED', 'DAKAR 4X2 AT', 'EXCEED 4X2 AT', 'EXCEED 4X2 MT', 'GLX 4X4 MT'];
+carsAndModels['Pajero'] = ['-- Silahkan pilih kategori', 'DAKAR 4X2 AT ULTIMATE', 'DAKAR 4X2 AT', 'GLX 4x4 MT', 'EXCEED 4x2 AT', 'EXCEED 4X2 MT'];
 carsAndModels['Mirage'] = ['-- Silahkan pilih kategori', 'Mirage Exceed', 'Mirage GLS', 'Mirage GLX'];
+carsAndModels['Xpander'] = ['-- Silahkan pilih kategori', 'Xpander Paket A', 'Xpander Paket B'];
 carsAndModels['Outlander'] = ['-- Silahkan pilih kategori', 'Outlander PX', 'Outlander GLS', 'Outlander GLX'];
 carsAndModels['Fuso'] = ['-- Silahkan pilih kategori', 'FM 517 HS', 'FM 517 HL', 'FM 517 HL LONG', 'FN 517 ML2', 'FN 517 ML2 SUPER LONG', 'FN 527 MS', 'FN 527 ML', 'FJ 2523', 'FJ 2528', 'FI 1217', 'FZ 4928 TH', 'FZ 4028 TH'];
 carsAndModels['FE Normal'] = ['-- Silahkan pilih kategori', 'FE 71', 'FE 71 (ESPASIO)', 'FE 71 BC', 'FE 71 L - FE 71 LCB - FL 71 PS', 'FE 73', 'FE 73 HD', 'FE 74 HDV', 'FE 74 S', 'FE 83 BC', 'FE 83 G HDL', 'FE 84 G BC', 'FE 83 G HDL', 'FE 84 G BC'];
@@ -1917,7 +1942,7 @@ carsAndModels['FE Spesial'] = ['-- Silahkan pilih kategori', 'SP FE 71', 'SP FE 
 carsAndModels['L300'] = ['-- Silahkan pilih kategori', 'L300 FB-FD', 'L300 Standard', 'L300 Minibus'];
 carsAndModels['Triton DC'] = ['-- Silahkan pilih kategori', 'All New Triton DC Exceed AT', 'All New Triton DC Exceed AT Limited', 'All New Triton DC Exceed MT', 'All New Triton DC Exceed MT Limited', 'All New Triton DC GLS', 'All New Triton DC HDX']
 carsAndModels['Triton SC'] = ['-- Silahkan pilih kategori', 'All New Triton SC HDX']
-carsAndModels['ColtT'] = ['-- Silahkan pilih kategori', 'Colt T120 SS FB-FD', 'Colt T120 SS Standard', 'Colt T120 SS 3 Ways'];
+carsAndModels['ColtT'] = ['-- Silahkan pilih kategori', 'Colt T120 SS FB-FD', 'Colt T120 SS Standard'];
 
 ChangeCatList = function () {
     var carList = document.getElementById("auto-category");
