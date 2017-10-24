@@ -1238,7 +1238,7 @@ autoCalculate = function (package, otr, tenor, dp, adm, ins1, ins2, tjh, tjhTota
             } else if (dp >= 0.35 && dp < 0.4) {
                 rate = package['d7'];
             } else if (dp >= 0.4 && dp < 1) {
-                rate = package['8'];
+                rate = package['d8'];
             }
             break;
         case "60":
@@ -1879,7 +1879,7 @@ ratePicker = function (package, tenor, dp) {
             } else if (dp >= 0.35 && dp < 0.4) {
                 rate = package['d7'];
             } else if (dp >= 0.4 && dp < 1) {
-                rate = package['8'];
+                rate = package['d8'];
             }
             break;
         case "60":
