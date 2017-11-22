@@ -1,4 +1,4 @@
-# DSF CALCULATION 1.1.3
+# 1.1.3
 
 A Simple app for finance calculation
 
