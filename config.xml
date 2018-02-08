@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.minimolabs.calc" version="1.3.1" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
-    <name>DSF Calculation</name>
+    <name>Quick Count</name>
     <description>
-        A simple DSF Calculation apps
+        Quick count
     </description>
     <author email="minimolabs@gmail.com" href="http://minimolabs.com">
         Minimo Labs
